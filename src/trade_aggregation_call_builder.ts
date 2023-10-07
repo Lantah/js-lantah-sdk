@@ -1,8 +1,8 @@
 /* tslint:disable: variable-name */
-import { Asset } from "stellar-base";
+import { Asset } from "lantah-base";
 import { CallBuilder } from "./call_builder";
 import { BadRequestError } from "./errors";
-import { Horizon } from "./horizon_api";
+import { Orbitr } from "./orbitr_api";
 import { ServerApi } from "./server_api";
 
 const allowedResolutions = [
@@ -21,7 +21,7 @@ const allowedResolutions = [
  * @class TradeAggregationCallBuilder
  * @extends CallBuilder
  * @constructor
- * @param {string} serverUrl serverUrl Horizon server URL.
+ * @param {string} serverUrl serverUrl Orbitr server URL.
  * @param {Asset} base base asset
  * @param {Asset} counter counter asset
  * @param {long} start_time lower time boundary represented as millis since epoch
@@ -102,7 +102,7 @@ export class TradeAggregationCallBuilder extends CallBuilder<
   }
 }
 
-interface TradeAggregationRecord extends Horizon.BaseResponse {
+interface TradeAggregationRecord extends Orbitr.BaseResponse {
   timestamp: number | string;
   trade_count: number | string;
   base_volume: string;

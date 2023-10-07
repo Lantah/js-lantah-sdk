@@ -1,5 +1,5 @@
-import { AssetType } from "stellar-base";
-import { Horizon } from "./../horizon_api";
+import { AssetType } from "lantah-base";
+import { Orbitr } from "./../orbitr_api";
 
 export interface OfferAsset {
   asset_type: AssetType;
@@ -7,14 +7,14 @@ export interface OfferAsset {
   asset_issuer?: string;
 }
 
-export interface OfferRecord extends Horizon.BaseResponse {
+export interface OfferRecord extends Orbitr.BaseResponse {
   id: number | string;
   paging_token: string;
   seller: string;
   selling: OfferAsset;
   buying: OfferAsset;
   amount: string;
-  price_r: Horizon.PriceRShorthand;
+  price_r: Orbitr.PriceRShorthand;
   price: string;
   last_modified_ledger: number;
   last_modified_time: string;

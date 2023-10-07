@@ -1,9 +1,9 @@
-import { Asset } from "stellar-base";
+import { Asset } from "lantah-base";
 import { CallBuilder } from "./call_builder";
 import { ServerApi } from "./server_api";
 
 /**
- * The Stellar Network allows payments to be made across assets through path
+ * The Lantah Network allows payments to be made across assets through path
  * payments. A strict send path payment specifies a series of assets to route a
  * payment through, from source asset (the asset debited from the payer) to
  * destination asset (the asset credited to the payee).
@@ -14,7 +14,7 @@ import { ServerApi } from "./server_api";
  * The source amount
  * The destination assets or destination account.
  *
- * As part of the search, horizon will load a list of assets available to the
+ * As part of the search, orbitr will load a list of assets available to the
  * source address and will find any payment paths from those source assets to
  * the desired destination asset. The search's source_amount parameter will be
  * used to determine if there a given path can satisfy a payment of the desired
@@ -23,7 +23,7 @@ import { ServerApi } from "./server_api";
  * Do not create this object directly, use {@link Server#strictSendPaths}.
  * @see [Find Payment Paths](https://developers.stellar.org/api/aggregations/paths/)
  * @extends CallBuilder
- * @param {string} serverUrl Horizon server URL.
+ * @param {string} serverUrl Orbitr server URL.
  * @param {Asset} sourceAsset The asset to be sent.
  * @param {string} sourceAmount The amount, denominated in the source asset, that any returned path should be able to satisfy.
  * @param {string|Asset[]} destination The destination account or the destination assets.

@@ -1,23 +1,23 @@
 {
-  "name": "stellar-sdk",
+  "name": "lantah-sdk",
   "version": "11.0.0-beta.4",
-  "description": "A library for working with the Stellar Horizon server.",
+  "description": "A library for working with the Lantah Orbitr server.",
   "keywords": [
-    "stellar"
+    "lantah"
   ],
-  "homepage": "https://github.com/stellar/js-stellar-sdk",
+  "homepage": "https://github.com/lantah/js-lantah-sdk",
   "bugs": {
-    "url": "https://github.com/stellar/js-stellar-sdk/issues"
+    "url": "https://github.com/lantah/js-lantah-sdk/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stellar/js-stellar-sdk.git"
+    "url": "https://github.com/lantah/js-lantah-sdk.git"
   },
   "license": "Apache-2.0",
-  "author": "Stellar Development Foundation <hello@stellar.org>",
+  "author": "Lantah Co <contact@lantah.org>",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
-  "browser": "./dist/stellar-sdk.js",
+  "browser": "./dist/lantah-sdk.js",
   "files": [
     "/types",
     "/lib",
@@ -143,7 +143,7 @@
     "bignumber.js": "^9.1.2",
     "eventsource": "^2.0.2",
     "randombytes": "^2.1.0",
-    "stellar-base": "10.0.0-beta.2",
+    "lantah-base": "10.0.0-beta.2",
     "toml": "^3.0.0",
     "urijs": "^1.19.1"
   }

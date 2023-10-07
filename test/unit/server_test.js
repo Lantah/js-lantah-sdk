@@ -2,11 +2,11 @@ const MockAdapter = require("axios-mock-adapter");
 
 describe("server.js non-transaction tests", function () {
   beforeEach(function () {
-    this.server = new StellarSdk.Server(
-      "https://horizon-live.stellar.org:1337",
+    this.server = new LantahSdk.Server(
+      "https://orbitr-live.lantah.network:1337",
     );
-    this.axiosMock = sinon.mock(HorizonAxiosClient);
-    StellarSdk.Config.setDefault();
+    this.axiosMock = sinon.mock(OrbitrAxiosClient);
+    LantahSdk.Config.setDefault();
   });
 
   afterEach(function () {
@@ -17,23 +17,23 @@ describe("server.js non-transaction tests", function () {
   describe("Server.constructor", function () {
     it("throws error for insecure server", function () {
       expect(
-        () => new StellarSdk.Server("http://horizon-live.stellar.org:1337"),
-      ).to.throw(/Cannot connect to insecure horizon server/);
+        () => new LantahSdk.Server("http://orbitr-live.lantah.network:1337"),
+      ).to.throw(/Cannot connect to insecure orbitr server/);
     });
 
     it("allow insecure server when opts.allowHttp flag is set", function () {
       expect(
         () =>
-          new StellarSdk.Server("http://horizon-live.stellar.org:1337", {
+          new LantahSdk.Server("http://orbitr-live.lantah.network:1337", {
             allowHttp: true,
           }),
       ).to.not.throw();
     });
 
     it("allow insecure server when global Config.allowHttp flag is set", function () {
-      StellarSdk.Config.setAllowHttp(true);
+      LantahSdk.Config.setAllowHttp(true);
       expect(
-        () => new StellarSdk.Server("http://horizon-live.stellar.org:1337"),
+        () => new LantahSdk.Server("http://orbitr-live.lantah.network:1337"),
       ).to.not.throw();
     });
   });
@@ -47,7 +47,7 @@ describe("server.js non-transaction tests", function () {
       // use MockAdapter instead of this.axiosMock
       // because we don't want to replace the get function
       // we need to use axios's one so interceptors run!!
-      this.axiosMockAdapter = new MockAdapter(HorizonAxiosClient);
+      this.axiosMockAdapter = new MockAdapter(OrbitrAxiosClient);
     });
 
     afterEach(function () {
@@ -59,7 +59,7 @@ describe("server.js non-transaction tests", function () {
     // don't change the order!!
     it("fetches falls back to local time if fetch is bad", function (done) {
       this.axiosMockAdapter
-        .onGet("https://horizon-live.stellar.org:1337/")
+        .onGet("https://orbitr-live.lantah.network:1337/")
         .reply(200, {}, {});
 
       this.server
@@ -75,7 +75,7 @@ describe("server.js non-transaction tests", function () {
 
     it("fetches if nothing is recorded", function (done) {
       this.axiosMockAdapter
-        .onGet("https://horizon-live.stellar.org:1337/")
+        .onGet("https://orbitr-live.lantah.network:1337/")
         .reply(
           200,
           {},
@@ -144,7 +144,7 @@ describe("server.js non-transaction tests", function () {
       this.axiosMock
         .expects("get")
         .withArgs(
-          sinon.match("https://horizon-live.stellar.org:1337/fee_stats"),
+          sinon.match("https://orbitr-live.stellar.org:1337/fee_stats"),
         )
         .returns(Promise.resolve({ data: response }));
 
@@ -163,7 +163,7 @@ describe("server.js non-transaction tests", function () {
       this.axiosMock
         .expects("get")
         .withArgs(
-          sinon.match("https://horizon-live.stellar.org:1337/fee_stats"),
+          sinon.match("https://orbitr-live.lantah.network:1337/fee_stats"),
         )
         .returns(Promise.resolve({ data: {} }));
 
@@ -222,7 +222,7 @@ describe("server.js non-transaction tests", function () {
       this.axiosMock
         .expects("get")
         .withArgs(
-          sinon.match("https://horizon-live.stellar.org:1337/fee_stats"),
+          sinon.match("https://orbitr-live.lantah.network:1337/fee_stats"),
         )
         .returns(Promise.resolve({ data: response }));
 
@@ -243,26 +243,26 @@ describe("server.js non-transaction tests", function () {
     let accountResponse = {
       "_links": {
         "self": {
-          "href": "https://horizon-testnet.stellar.org/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS"
+          "href": "https://orbitr-testnet.lantah.network/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS"
         },
         "transactions": {
-          "href": "https://horizon-testnet.stellar.org/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS/transactions{?cursor,limit,order}",
+          "href": "https://orbitr-testnet.lantah.network/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS/transactions{?cursor,limit,order}",
           "templated": true
         },
         "operations": {
-          "href": "https://horizon-testnet.stellar.org/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS/operations{?cursor,limit,order}",
+          "href": "https://orbitr-testnet.lantah.network/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS/operations{?cursor,limit,order}",
           "templated": true
         },
         "payments": {
-          "href": "https://horizon-testnet.stellar.org/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS/payments{?cursor,limit,order}",
+          "href": "https://orbitr-testnet.lantah.network/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS/payments{?cursor,limit,order}",
           "templated": true
         },
         "effects": {
-          "href": "https://horizon-testnet.stellar.org/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS/effects{?cursor,limit,order}",
+          "href": "https://orbitr-testnet.lantah.network/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS/effects{?cursor,limit,order}",
           "templated": true
         },
         "offers": {
-          "href": "https://horizon-testnet.stellar.org/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS/offers{?cursor,limit,order}",
+          "href": "https://orbitr-testnet.lantah.network/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS/offers{?cursor,limit,order}",
           "templated": true
         }
       },
@@ -325,7 +325,7 @@ describe("server.js non-transaction tests", function () {
         .expects("get")
         .withArgs(
           sinon.match(
-            "https://horizon-live.stellar.org:1337/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS",
+            "https://orbitr-live.lantah.network:1337/accounts/GBAH7FQMC3CZJ4WD6GE7G7YXCIU36LC2IHXQ7D5MQAUO4PODOWIVLSFS",
           ),
         )
         .returns(Promise.resolve({ data: accountResponse }));
@@ -410,7 +410,7 @@ describe("server.js non-transaction tests", function () {
           this.axiosMock
             .expects("get")
             .withArgs(
-              sinon.match("https://horizon-live.stellar.org:1337/ledgers"),
+              sinon.match("https://orbitr-live.lantah.network:1337/ledgers"),
             )
             .returns(Promise.resolve({ data: ledgersResponse }));
 
@@ -437,7 +437,7 @@ describe("server.js non-transaction tests", function () {
             .expects("get")
             .withArgs(
               sinon.match(
-                "https://horizon-live.stellar.org:1337/ledgers?limit=1&cursor=b&order=asc",
+                "https://orbitr-live.lantah.network:1337/ledgers?limit=1&cursor=b&order=asc",
               ),
             )
             .returns(Promise.resolve({ data: ledgersResponse }));
@@ -465,7 +465,7 @@ describe("server.js non-transaction tests", function () {
             .expects("get")
             .withArgs(
               sinon.match(
-                "https://horizon-live.stellar.org:1337/ledgers?order=asc&limit=1&cursor=4294967296",
+                "https://orbitr-live.lantah.network:1337/ledgers?order=asc&limit=1&cursor=4294967296",
               ),
             )
             .returns(Promise.resolve({ data: ledgersResponse }));
@@ -524,7 +524,7 @@ describe("server.js non-transaction tests", function () {
           this.axiosMock
             .expects("get")
             .withArgs(
-              sinon.match("https://horizon-live.stellar.org:1337/ledgers/1"),
+              sinon.match("https://orbitr-live.lantah.network:1337/ledgers/1"),
             )
             .returns(
               Promise.reject({
@@ -540,7 +540,7 @@ describe("server.js non-transaction tests", function () {
               done("didn't throw an error");
             })
             .catch(function (err) {
-              if (err instanceof StellarSdk.NotFoundError) {
+              if (err instanceof LantahSdk.NotFoundError) {
                 done();
               } else {
                 done(err);
@@ -553,7 +553,7 @@ describe("server.js non-transaction tests", function () {
           this.axiosMock
             .expects("get")
             .withArgs(
-              sinon.match("https://horizon-live.stellar.org:1337/ledgers/1"),
+              sinon.match("https://orbitr-live.lantah.network:1337/ledgers/1"),
             )
             .returns(Promise.resolve({ data: singleLedgerResponse }));
 
@@ -577,7 +577,7 @@ describe("server.js non-transaction tests", function () {
             .expects("get")
             .withArgs(
               sinon.match(
-                "https://horizon-live.stellar.org:1337/ledgers/1?limit=1&cursor=b&order=asc",
+                "https://orbitr-live.lantah.network:1337/ledgers/1?limit=1&cursor=b&order=asc",
               ),
             )
             .returns(Promise.resolve({ data: singleLedgerResponse }));
@@ -604,13 +604,13 @@ describe("server.js non-transaction tests", function () {
       let transactionsResponse = {
         _links: {
           self: {
-            href: "https://horizon.stellar.org/transactions?order=desc\u0026limit=1\u0026cursor=",
+            href: "https://orbitr.lantah.network/transactions?order=desc\u0026limit=1\u0026cursor=",
           },
           next: {
-            href: "https://horizon.stellar.org/transactions?order=desc\u0026limit=1\u0026cursor=34156680904183808",
+            href: "https://orbitr.lantah.network/transactions?order=desc\u0026limit=1\u0026cursor=34156680904183808",
           },
           prev: {
-            href: "https://horizon.stellar.org/transactions?order=asc\u0026limit=1\u0026cursor=34156680904183808",
+            href: "https://orbitr.lantah.network/transactions?order=asc\u0026limit=1\u0026cursor=34156680904183808",
           },
         },
         _embedded: {
@@ -618,27 +618,27 @@ describe("server.js non-transaction tests", function () {
             {
               _links: {
                 self: {
-                  href: "https://horizon.stellar.org/transactions/c585b8764b28be678c482f8b6e87e76e4b5f28043c53f4dcb7b724b4b2efebc1",
+                  href: "https://orbitr.lantah.network/transactions/c585b8764b28be678c482f8b6e87e76e4b5f28043c53f4dcb7b724b4b2efebc1",
                 },
                 account: {
-                  href: "https://horizon.stellar.org/accounts/GBURK32BMC7XORYES62HDKY7VTA5MO7JYBDH7KTML4EPN4BV2MIRQOVR",
+                  href: "https://orbitr.lantah.network/accounts/GBURK32BMC7XORYES62HDKY7VTA5MO7JYBDH7KTML4EPN4BV2MIRQOVR",
                 },
                 ledger: {
-                  href: "https://horizon.stellar.org/ledgers/7952722",
+                  href: "https://orbitr.lantah.network/ledgers/7952722",
                 },
                 operations: {
-                  href: "https://horizon.stellar.org/transactions/c585b8764b28be678c482f8b6e87e76e4b5f28043c53f4dcb7b724b4b2efebc1/operations{?cursor,limit,order}",
+                  href: "https://orbitr.lantah.network/transactions/c585b8764b28be678c482f8b6e87e76e4b5f28043c53f4dcb7b724b4b2efebc1/operations{?cursor,limit,order}",
                   templated: true,
                 },
                 effects: {
-                  href: "https://horizon.stellar.org/transactions/c585b8764b28be678c482f8b6e87e76e4b5f28043c53f4dcb7b724b4b2efebc1/effects{?cursor,limit,order}",
+                  href: "https://orbitr.lantah.network/transactions/c585b8764b28be678c482f8b6e87e76e4b5f28043c53f4dcb7b724b4b2efebc1/effects{?cursor,limit,order}",
                   templated: true,
                 },
                 precedes: {
-                  href: "https://horizon.stellar.org/transactions?order=asc\u0026cursor=34156680904183808",
+                  href: "https://orbitr.lantah.network/transactions?order=asc\u0026cursor=34156680904183808",
                 },
                 succeeds: {
-                  href: "https://horizon.stellar.org/transactions?order=desc\u0026cursor=34156680904183808",
+                  href: "https://orbitr.lantah.network/transactions?order=desc\u0026cursor=34156680904183808",
                 },
               },
               id: "c585b8764b28be678c482f8b6e87e76e4b5f28043c53f4dcb7b724b4b2efebc1",
@@ -675,7 +675,7 @@ describe("server.js non-transaction tests", function () {
             .expects("get")
             .withArgs(
               sinon.match(
-                "https://horizon-live.stellar.org:1337/ledgers/7952722/transactions",
+                "https://orbitr-live.lantah.network:1337/ledgers/7952722/transactions",
               ),
             )
             .returns(Promise.resolve({ data: transactionsResponse }));
@@ -684,7 +684,7 @@ describe("server.js non-transaction tests", function () {
             .expects("get")
             .withArgs(
               sinon.match(
-                /^https:\/\/horizon.stellar.org\/transactions\/c585b8764b28be678c482f8b6e87e76e4b5f28043c53f4dcb7b724b4b2efebc1\/operations/,
+                /^https:\/\/orbitr.lantah.network\/transactions\/c585b8764b28be678c482f8b6e87e76e4b5f28043c53f4dcb7b724b4b2efebc1\/operations/,
               ),
             )
             .returns(Promise.resolve({ data: { operations: [] } }));
@@ -723,7 +723,7 @@ describe("server.js non-transaction tests", function () {
             .expects("get")
             .withArgs(
               sinon.match(
-                "https://horizon-live.stellar.org:1337/ledgers/7952722/transactions?cursor=b&limit=1&order=asc",
+                "https://orbitr-live.lantah.network:1337/ledgers/7952722/transactions?cursor=b&limit=1&order=asc",
               ),
             )
             .returns(Promise.resolve({ data: transactionsResponse }));
@@ -732,7 +732,7 @@ describe("server.js non-transaction tests", function () {
             .expects("get")
             .withArgs(
               sinon.match(
-                /^https:\/\/horizon.stellar.org\/transactions\/c585b8764b28be678c482f8b6e87e76e4b5f28043c53f4dcb7b724b4b2efebc1\/operations\?limit=1/,
+                /^https:\/\/orbitr.lantah.network\/transactions\/c585b8764b28be678c482f8b6e87e76e4b5f28043c53f4dcb7b724b4b2efebc1\/operations\?limit=1/,
               ),
             )
             .returns(Promise.resolve({ data: { operations: [] } }));
@@ -788,27 +788,27 @@ describe("server.js non-transaction tests", function () {
         let singleTranssactionResponse = {
           _links: {
             self: {
-              href: "https://horizon-testnet.stellar.org/transactions/6bbd8cbd90498a26210a21ec599702bead8f908f412455da300318aba36831b0",
+              href: "https://orbitr-testnet.lantah.network/transactions/6bbd8cbd90498a26210a21ec599702bead8f908f412455da300318aba36831b0",
             },
             account: {
-              href: "https://horizon-testnet.stellar.org/accounts/GBCCHT5P34DMK2LTN4SPHBAJCXYFNUEWSM7SDSWEXJA7NN6CA3HNHTM6",
+              href: "https://orbitr-testnet.lantah.network/accounts/GBCCHT5P34DMK2LTN4SPHBAJCXYFNUEWSM7SDSWEXJA7NN6CA3HNHTM6",
             },
             ledger: {
-              href: "https://horizon-testnet.stellar.org/ledgers/121879",
+              href: "https://orbitr-testnet.lantah.network/ledgers/121879",
             },
             operations: {
-              href: "https://horizon-testnet.stellar.org/transactions/6bbd8cbd90498a26210a21ec599702bead8f908f412455da300318aba36831b0/operations{?cursor,limit,order}",
+              href: "https://orbitr-testnet.lantah.network/transactions/6bbd8cbd90498a26210a21ec599702bead8f908f412455da300318aba36831b0/operations{?cursor,limit,order}",
               templated: true,
             },
             effects: {
-              href: "https://horizon-testnet.stellar.org/transactions/6bbd8cbd90498a26210a21ec599702bead8f908f412455da300318aba36831b0/effects{?cursor,limit,order}",
+              href: "https://orbitr-testnet.lantah.network/transactions/6bbd8cbd90498a26210a21ec599702bead8f908f412455da300318aba36831b0/effects{?cursor,limit,order}",
               templated: true,
             },
             precedes: {
-              href: "https://horizon-testnet.stellar.org/transactions?order=asc&cursor=523466319077376",
+              href: "https://orbitr-testnet.lantah.network/transactions?order=asc&cursor=523466319077376",
             },
             succeeds: {
-              href: "https://horizon-testnet.stellar.org/transactions?order=desc&cursor=523466319077376",
+              href: "https://orbitr-testnet.lantah.network/transactions?order=desc&cursor=523466319077376",
             },
           },
           id: "6bbd8cbd90498a26210a21ec599702bead8f908f412455da300318aba36831b0",
@@ -841,7 +841,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/transactions/6bbd8cbd90498a26210a21ec599702bead8f908f412455da300318aba36831b0",
+              "https://orbitr-live.lantah.network:1337/transactions/6bbd8cbd90498a26210a21ec599702bead8f908f412455da300318aba36831b0",
             ),
           )
           .returns(Promise.resolve({ data: singleTranssactionResponse }));
@@ -864,13 +864,13 @@ describe("server.js non-transaction tests", function () {
       const transactionsResponse = {
         _links: {
           self: {
-            href: "https://horizon.stellar.org/transactions?cursor=\u0026limit=3\u0026order=asc",
+            href: "https://orbitr.lantah.network/transactions?cursor=\u0026limit=3\u0026order=asc",
           },
           next: {
-            href: "https://horizon.stellar.org/transactions?cursor=33736968114176\u0026limit=3\u0026order=asc",
+            href: "https://orbitr.lantah.network/transactions?cursor=33736968114176\u0026limit=3\u0026order=asc",
           },
           prev: {
-            href: "https://horizon.stellar.org/transactions?cursor=12884905984\u0026limit=3\u0026order=desc",
+            href: "https://orbitr.lantah.network/transactions?cursor=12884905984\u0026limit=3\u0026order=desc",
           },
         },
         _embedded: {
@@ -879,27 +879,27 @@ describe("server.js non-transaction tests", function () {
               memo: "hello world",
               _links: {
                 self: {
-                  href: "https://horizon.stellar.org/transactions/3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889",
+                  href: "https://orbitr.lantah.network/transactions/3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889",
                 },
                 account: {
-                  href: "https://horizon.stellar.org/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7",
+                  href: "https://orbitr.lantah.network/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7",
                 },
                 ledger: {
-                  href: "https://horizon.stellar.org/ledgers/3",
+                  href: "https://orbitr.lantah.network/ledgers/3",
                 },
                 operations: {
-                  href: "https://horizon.stellar.org/transactions/3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889/operations{?cursor,limit,order}",
+                  href: "https://orbitr.lantah.network/transactions/3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889/operations{?cursor,limit,order}",
                   templated: true,
                 },
                 effects: {
-                  href: "https://horizon.stellar.org/transactions/3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889/effects{?cursor,limit,order}",
+                  href: "https://orbitr.lantah.network/transactions/3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889/effects{?cursor,limit,order}",
                   templated: true,
                 },
                 precedes: {
-                  href: "https://horizon.stellar.org/transactions?order=asc\u0026cursor=12884905984",
+                  href: "https://orbitr.lantah.network/transactions?order=asc\u0026cursor=12884905984",
                 },
                 succeeds: {
-                  href: "https://horizon.stellar.org/transactions?order=desc\u0026cursor=12884905984",
+                  href: "https://orbitr.lantah.network/transactions?order=desc\u0026cursor=12884905984",
                 },
               },
               id: "3389e9f0f1a65f19736cacf544c2e825313e8447f569233bb8db39aa607c8889",
@@ -931,27 +931,27 @@ describe("server.js non-transaction tests", function () {
               memo: "testpool,faucet,sdf",
               _links: {
                 self: {
-                  href: "https://horizon.stellar.org/transactions/2db4b22ca018119c5027a80578813ffcf582cda4aa9e31cd92b43cf1bda4fc5a",
+                  href: "https://orbitr.lantah.network/transactions/2db4b22ca018119c5027a80578813ffcf582cda4aa9e31cd92b43cf1bda4fc5a",
                 },
                 account: {
-                  href: "https://horizon.stellar.org/accounts/GALPCCZN4YXA3YMJHKL6CVIECKPLJJCTVMSNYWBTKJW4K5HQLYLDMZTB",
+                  href: "https://orbitr.lantah.network/accounts/GALPCCZN4YXA3YMJHKL6CVIECKPLJJCTVMSNYWBTKJW4K5HQLYLDMZTB",
                 },
                 ledger: {
-                  href: "https://horizon.stellar.org/ledgers/7841",
+                  href: "https://orbitr.lantah.network/ledgers/7841",
                 },
                 operations: {
-                  href: "https://horizon.stellar.org/transactions/2db4b22ca018119c5027a80578813ffcf582cda4aa9e31cd92b43cf1bda4fc5a/operations{?cursor,limit,order}",
+                  href: "https://orbitr.lantah.network/transactions/2db4b22ca018119c5027a80578813ffcf582cda4aa9e31cd92b43cf1bda4fc5a/operations{?cursor,limit,order}",
                   templated: true,
                 },
                 effects: {
-                  href: "https://horizon.stellar.org/transactions/2db4b22ca018119c5027a80578813ffcf582cda4aa9e31cd92b43cf1bda4fc5a/effects{?cursor,limit,order}",
+                  href: "https://orbitr.lantah.network/transactions/2db4b22ca018119c5027a80578813ffcf582cda4aa9e31cd92b43cf1bda4fc5a/effects{?cursor,limit,order}",
                   templated: true,
                 },
                 precedes: {
-                  href: "https://horizon.stellar.org/transactions?order=asc\u0026cursor=33676838572032",
+                  href: "https://orbitr.lantah.network/transactions?order=asc\u0026cursor=33676838572032",
                 },
                 succeeds: {
-                  href: "https://horizon.stellar.org/transactions?order=desc\u0026cursor=33676838572032",
+                  href: "https://orbitr.lantah.network/transactions?order=desc\u0026cursor=33676838572032",
                 },
               },
               id: "2db4b22ca018119c5027a80578813ffcf582cda4aa9e31cd92b43cf1bda4fc5a",
@@ -983,27 +983,27 @@ describe("server.js non-transaction tests", function () {
               memo: "",
               _links: {
                 self: {
-                  href: "https://horizon.stellar.org/transactions/3ce2aca2fed36da2faea31352c76c5e412348887a4c119b1e90de8d1b937396a",
+                  href: "https://orbitr.lantah.network/transactions/3ce2aca2fed36da2faea31352c76c5e412348887a4c119b1e90de8d1b937396a",
                 },
                 account: {
-                  href: "https://horizon.stellar.org/accounts/GALPCCZN4YXA3YMJHKL6CVIECKPLJJCTVMSNYWBTKJW4K5HQLYLDMZTB",
+                  href: "https://orbitr.lantah.network/accounts/GALPCCZN4YXA3YMJHKL6CVIECKPLJJCTVMSNYWBTKJW4K5HQLYLDMZTB",
                 },
                 ledger: {
-                  href: "https://horizon.stellar.org/ledgers/7855",
+                  href: "https://orbitr.lantah.network/ledgers/7855",
                 },
                 operations: {
-                  href: "https://horizon.stellar.org/transactions/3ce2aca2fed36da2faea31352c76c5e412348887a4c119b1e90de8d1b937396a/operations{?cursor,limit,order}",
+                  href: "https://orbitr.lantah.network/transactions/3ce2aca2fed36da2faea31352c76c5e412348887a4c119b1e90de8d1b937396a/operations{?cursor,limit,order}",
                   templated: true,
                 },
                 effects: {
-                  href: "https://horizon.stellar.org/transactions/3ce2aca2fed36da2faea31352c76c5e412348887a4c119b1e90de8d1b937396a/effects{?cursor,limit,order}",
+                  href: "https://orbitr.lantah.network/transactions/3ce2aca2fed36da2faea31352c76c5e412348887a4c119b1e90de8d1b937396a/effects{?cursor,limit,order}",
                   templated: true,
                 },
                 precedes: {
-                  href: "https://horizon.stellar.org/transactions?order=asc\u0026cursor=33736968114176",
+                  href: "https://orbitr.lantah.network/transactions?order=asc\u0026cursor=33736968114176",
                 },
                 succeeds: {
-                  href: "https://horizon.stellar.org/transactions?order=desc\u0026cursor=33736968114176",
+                  href: "https://orbitr.lantah.network/transactions?order=desc\u0026cursor=33736968114176",
                 },
               },
               id: "3ce2aca2fed36da2faea31352c76c5e412348887a4c119b1e90de8d1b937396a",
@@ -1039,7 +1039,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/claimable_balances/000000000102030000000000000000000000000000000000000000000000000000000000/transactions",
+              "https://orbitr-live.lantah.network:1337/claimable_balances/000000000102030000000000000000000000000000000000000000000000000000000000/transactions",
             ),
           )
           .returns(Promise.resolve({ data: transactionsResponse }));
@@ -1126,7 +1126,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/accounts/GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K",
+              "https://orbitr-live.lantah.network:1337/accounts/GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K",
             ),
           )
           .returns(Promise.resolve({ data: singleAccountResponse }));
@@ -1250,7 +1250,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/accounts?signer=GBCR5OVQ54S2EKHLBZMK6VYMTXZHXN3T45Y6PRX4PX4FXDMJJGY4FD42",
+              "https://orbitr-live.lantah.network:1337/accounts?signer=GBCR5OVQ54S2EKHLBZMK6VYMTXZHXN3T45Y6PRX4PX4FXDMJJGY4FD42",
             ),
           )
           .returns(Promise.resolve({ data: accountsForSignerResponse }));
@@ -1378,7 +1378,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/accounts?asset=USD%3AGDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD",
+              "https://orbitr-live.lantah.network:1337/accounts?asset=USD%3AGDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD",
             ),
           )
           .returns(Promise.resolve({ data: accountsForAssetResponse }));
@@ -1386,7 +1386,7 @@ describe("server.js non-transaction tests", function () {
         this.server
           .accounts()
           .forAsset(
-            new StellarSdk.Asset(
+            new LantahSdk.Asset(
               "USD",
               "GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD",
             ),
@@ -1515,7 +1515,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/accounts?sponsor=GBCR5OVQ54S2EKHLBZMK6VYMTXZHXN3T45Y6PRX4PX4FXDMJJGY4FD42",
+              "https://orbitr-live.lantah.network:1337/accounts?sponsor=GBCR5OVQ54S2EKHLBZMK6VYMTXZHXN3T45Y6PRX4PX4FXDMJJGY4FD42",
             ),
           )
           .returns(Promise.resolve({ data: accountsForSponsor }));
@@ -1670,7 +1670,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/accounts?liquidity_pool=dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380fac7",
+              "https://orbitr-live.lantah.network:1337/accounts?liquidity_pool=dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380fac7",
             ),
           )
           .returns(Promise.resolve({ data: accountsForAssetResponse }));
@@ -1718,7 +1718,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/offers?order=asc",
+              "https://orbitr-live.lantah.network:1337/offers?order=asc",
             ),
           )
           .returns(Promise.resolve({ data: offersResponse }));
@@ -1743,10 +1743,10 @@ describe("server.js non-transaction tests", function () {
         const offerResponse = {
           _links: {
             self: {
-              href: "https://horizon.stellar.org/offers/12345",
+              href: "https://orbitr.lantah.network/offers/12345",
             },
             offer_maker: {
-              href: "https://horizon.stellar.org/accounts/GCK4WSNF3F6ZNCMK6BU77ZCZ3NMF3JGU2U3ZAPKXYBKYYCJA72FDBY7K",
+              href: "https://orbitr.lantah.network/accounts/GCK4WSNF3F6ZNCMK6BU77ZCZ3NMF3JGU2U3ZAPKXYBKYYCJA72FDBY7K",
             },
           },
           id: 12345,
@@ -1774,7 +1774,7 @@ describe("server.js non-transaction tests", function () {
         this.axiosMock
           .expects("get")
           .withArgs(
-            sinon.match("https://horizon-live.stellar.org:1337/offers/12345"),
+            sinon.match("https://orbitr-live.lantah.network:1337/offers/12345"),
           )
           .returns(Promise.resolve({ data: offerResponse }));
 
@@ -1797,7 +1797,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/accounts/GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K/offers?order=asc",
+              "https://orbitr-live.lantah.network:1337/accounts/GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K/offers?order=asc",
             ),
           )
           .returns(Promise.resolve({ data: offersResponse }));
@@ -1822,7 +1822,7 @@ describe("server.js non-transaction tests", function () {
           });
       });
       it("selling requests the correct endpoint", function (done) {
-        const selling = new StellarSdk.Asset(
+        const selling = new LantahSdk.Asset(
           "USD",
           "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
         );
@@ -1831,7 +1831,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/offers?selling_asset_type=credit_alphanum4&selling_asset_code=USD&selling_asset_issuer=GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG&order=asc",
+              "https://orbitr-live.lantah.network:1337/offers?selling_asset_type=credit_alphanum4&selling_asset_code=USD&selling_asset_issuer=GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG&order=asc",
             ),
           )
           .returns(Promise.resolve({ data: offersResponse }));
@@ -1854,7 +1854,7 @@ describe("server.js non-transaction tests", function () {
           });
       });
       it("buying requests the correct endpoint", function (done) {
-        const buying = new StellarSdk.Asset(
+        const buying = new LantahSdk.Asset(
           "COP",
           "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
         );
@@ -1863,7 +1863,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/offers?buying_asset_type=credit_alphanum4&buying_asset_code=COP&buying_asset_issuer=GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG&order=asc",
+              "https://orbitr-live.lantah.network:1337/offers?buying_asset_type=credit_alphanum4&buying_asset_code=COP&buying_asset_issuer=GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG&order=asc",
             ),
           )
           .returns(Promise.resolve({ data: offersResponse }));
@@ -1890,7 +1890,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/offers?sponsor=GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG&order=asc",
+              "https://orbitr-live.lantah.network:1337/offers?sponsor=GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG&order=asc",
             ),
           )
           .returns(Promise.resolve({ data: offersResponse }));
@@ -1936,15 +1936,15 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/order_book?selling_asset_type=native&buying_asset_type=credit_alphanum4&buying_asset_code=USD&buying_asset_issuer=GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
+              "https://orbitr-live.lantah.network:1337/order_book?selling_asset_type=native&buying_asset_type=credit_alphanum4&buying_asset_code=USD&buying_asset_issuer=GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
             ),
           )
           .returns(Promise.resolve({ data: orderBookResponse }));
 
         this.server
           .orderbook(
-            StellarSdk.Asset.native(),
-            new StellarSdk.Asset(
+            LantahSdk.Asset.native(),
+            new LantahSdk.Asset(
               "USD",
               "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
             ),
@@ -1964,18 +1964,18 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/order_book?selling_asset_type=credit_alphanum4&selling_asset_code=USD&selling_asset_issuer=GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG&buying_asset_type=native",
+              "https://orbitr-live.lantah.network:1337/order_book?selling_asset_type=credit_alphanum4&selling_asset_code=USD&selling_asset_issuer=GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG&buying_asset_type=native",
             ),
           )
           .returns(Promise.resolve({ data: orderBookResponse }));
 
         this.server
           .orderbook(
-            new StellarSdk.Asset(
+            new LantahSdk.Asset(
               "USD",
               "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
             ),
-            StellarSdk.Asset.native(),
+            LantahSdk.Asset.native(),
           )
           .call()
           .then(function (response) {
@@ -1993,13 +1993,13 @@ describe("server.js non-transaction tests", function () {
         let tradesResponse = {
           _links: {
             self: {
-              href: "https://horizon-live.stellar.org:1337/trades?order=asc&limit=200&cursor=",
+              href: "https://orbitr-live.lantah.network:1337/trades?order=asc&limit=200&cursor=",
             },
             next: {
-              href: "https://horizon-live.stellar.org:1337/trades?order=asc&limit=200&cursor=64199539053039617-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?order=asc&limit=200&cursor=64199539053039617-0",
             },
             prev: {
-              href: "https://horizon-live.stellar.org:1337/trades?order=desc&limit=200&cursor=64199539053039617-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?order=desc&limit=200&cursor=64199539053039617-0",
             },
           },
           _embedded: {
@@ -2007,13 +2007,13 @@ describe("server.js non-transaction tests", function () {
               {
                 _links: {
                   base: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GB7JKG66CJN3ACX5DX43FOZTTSOI7GZUP547I3BSXIJVUX3NRYUXHE6W",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GB7JKG66CJN3ACX5DX43FOZTTSOI7GZUP547I3BSXIJVUX3NRYUXHE6W",
                   },
                   counter: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GC6APVH2HCFB7QLSTG3U55IYSW7ZRNSCTOZZYZJCNHWX2FONCNJNULYN",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GC6APVH2HCFB7QLSTG3U55IYSW7ZRNSCTOZZYZJCNHWX2FONCNJNULYN",
                   },
                   operation: {
-                    href: "https://horizon-live.stellar.org:1337/operations/64199539053039617",
+                    href: "https://orbitr-live.lantah.network:1337/operations/64199539053039617",
                   },
                 },
                 id: "64199539053039617-0",
@@ -2044,7 +2044,7 @@ describe("server.js non-transaction tests", function () {
 
         this.axiosMock
           .expects("get")
-          .withArgs(sinon.match("https://horizon-live.stellar.org:1337/trades"))
+          .withArgs(sinon.match("https://orbitr-live.lantah.network:1337/trades"))
           .returns(Promise.resolve({ data: tradesResponse }));
 
         this.server
@@ -2065,13 +2065,13 @@ describe("server.js non-transaction tests", function () {
         let tradesResponse = {
           _links: {
             self: {
-              href: "https://horizon-live.stellar.org:1337/trades?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=JPY&counter_asset_issuer=GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM&order=asc&limit=10&cursor=",
+              href: "https://orbitr-live.lantah.network:1337/trades?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=JPY&counter_asset_issuer=GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM&order=asc&limit=10&cursor=",
             },
             next: {
-              href: "https://horizon-live.stellar.org:1337/trades?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=JPY&counter_asset_issuer=GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM&order=asc&limit=10&cursor=64199539053039617-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=JPY&counter_asset_issuer=GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM&order=asc&limit=10&cursor=64199539053039617-0",
             },
             prev: {
-              href: "https://horizon-live.stellar.org:1337/trades?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=JPY&counter_asset_issuer=GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM&order=desc&limit=10&cursor=64199539053039617-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=JPY&counter_asset_issuer=GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM&order=desc&limit=10&cursor=64199539053039617-0",
             },
           },
           _embedded: {
@@ -2079,13 +2079,13 @@ describe("server.js non-transaction tests", function () {
               {
                 _links: {
                   base: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GB7JKG66CJN3ACX5DX43FOZTTSOI7GZUP547I3BSXIJVUX3NRYUXHE6W",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GB7JKG66CJN3ACX5DX43FOZTTSOI7GZUP547I3BSXIJVUX3NRYUXHE6W",
                   },
                   counter: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GC6APVH2HCFB7QLSTG3U55IYSW7ZRNSCTOZZYZJCNHWX2FONCNJNULYN",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GC6APVH2HCFB7QLSTG3U55IYSW7ZRNSCTOZZYZJCNHWX2FONCNJNULYN",
                   },
                   operation: {
-                    href: "https://horizon-live.stellar.org:1337/operations/64199539053039617",
+                    href: "https://orbitr-live.lantah.network:1337/operations/64199539053039617",
                   },
                 },
                 id: "64199539053039617-0",
@@ -2118,7 +2118,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/trades?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=JPY&counter_asset_issuer=GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM",
+              "https://orbitr-live.lantah.network:1337/trades?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=JPY&counter_asset_issuer=GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM",
             ),
           )
           .returns(Promise.resolve({ data: tradesResponse }));
@@ -2126,8 +2126,8 @@ describe("server.js non-transaction tests", function () {
         this.server
           .trades()
           .forAssetPair(
-            StellarSdk.Asset.native(),
-            new StellarSdk.Asset(
+            LantahSdk.Asset.native(),
+            new LantahSdk.Asset(
               "JPY",
               "GBVAOIACNSB7OVUXJYC5UE2D4YK2F7A24T7EE5YOMN4CE6GCHUTOUQXM",
             ),
@@ -2148,13 +2148,13 @@ describe("server.js non-transaction tests", function () {
         let tradesResponse = {
           _links: {
             self: {
-              href: "https://horizon-live.stellar.org:1337/trades?offer_id=278232&order=asc&limit=10&cursor=",
+              href: "https://orbitr-live.lantah.network:1337/trades?offer_id=278232&order=asc&limit=10&cursor=",
             },
             next: {
-              href: "https://horizon-live.stellar.org:1337/trades?offer_id=278232&order=asc&limit=10&cursor=64199539053039617-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?offer_id=278232&order=asc&limit=10&cursor=64199539053039617-0",
             },
             prev: {
-              href: "https://horizon-live.stellar.org:1337/trades?offer_id=278232&order=desc&limit=10&cursor=64199539053039617-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?offer_id=278232&order=desc&limit=10&cursor=64199539053039617-0",
             },
           },
           _embedded: {
@@ -2162,13 +2162,13 @@ describe("server.js non-transaction tests", function () {
               {
                 _links: {
                   base: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GB7JKG66CJN3ACX5DX43FOZTTSOI7GZUP547I3BSXIJVUX3NRYUXHE6W",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GB7JKG66CJN3ACX5DX43FOZTTSOI7GZUP547I3BSXIJVUX3NRYUXHE6W",
                   },
                   counter: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GC6APVH2HCFB7QLSTG3U55IYSW7ZRNSCTOZZYZJCNHWX2FONCNJNULYN",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GC6APVH2HCFB7QLSTG3U55IYSW7ZRNSCTOZZYZJCNHWX2FONCNJNULYN",
                   },
                   operation: {
-                    href: "https://horizon-live.stellar.org:1337/operations/64199539053039617",
+                    href: "https://orbitr-live.lantah.network:1337/operations/64199539053039617",
                   },
                 },
                 id: "64199539053039617-0",
@@ -2201,7 +2201,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/trades?offer_id=278232",
+              "https://orbitr-live.lantah.network:1337/trades?offer_id=278232",
             ),
           )
           .returns(Promise.resolve({ data: tradesResponse }));
@@ -2225,13 +2225,13 @@ describe("server.js non-transaction tests", function () {
         let tradesResponse = {
           _links: {
             self: {
-              href: "https://horizon-live.stellar.org:1337/accounts/GABJBA4HI4LVKWAYORE7SOAAZMVXDHI566JBSD25O5TRDM7LVID6YOXY/trades?cursor=&limit=10&order=asc",
+              href: "https://orbitr-live.lantah.network:1337/accounts/GABJBA4HI4LVKWAYORE7SOAAZMVXDHI566JBSD25O5TRDM7LVID6YOXY/trades?cursor=&limit=10&order=asc",
             },
             next: {
-              href: "https://horizon-live.stellar.org:1337/accounts/GABJBA4HI4LVKWAYORE7SOAAZMVXDHI566JBSD25O5TRDM7LVID6YOXY/trades?cursor=77434489365606401-1&limit=10&order=asc",
+              href: "https://orbitr-live.lantah.network:1337/accounts/GABJBA4HI4LVKWAYORE7SOAAZMVXDHI566JBSD25O5TRDM7LVID6YOXY/trades?cursor=77434489365606401-1&limit=10&order=asc",
             },
             prev: {
-              href: "https://horizon-live.stellar.org:1337/accounts/GABJBA4HI4LVKWAYORE7SOAAZMVXDHI566JBSD25O5TRDM7LVID6YOXY/trades?cursor=77434489365606401-1&limit=10&order=desc",
+              href: "https://orbitr-live.lantah.network:1337/accounts/GABJBA4HI4LVKWAYORE7SOAAZMVXDHI566JBSD25O5TRDM7LVID6YOXY/trades?cursor=77434489365606401-1&limit=10&order=desc",
             },
           },
           _embedded: {
@@ -2242,13 +2242,13 @@ describe("server.js non-transaction tests", function () {
                     href: "",
                   },
                   seller: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GBDTBUKFHJOEAFAVNPGIY65CBIH75DYEZ5VQXOE7YHZM7AJKDNEOW5JG",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GBDTBUKFHJOEAFAVNPGIY65CBIH75DYEZ5VQXOE7YHZM7AJKDNEOW5JG",
                   },
                   buyer: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GABJBA4HI4LVKWAYORE7SOAAZMVXDHI566JBSD25O5TRDM7LVID6YOXY",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GABJBA4HI4LVKWAYORE7SOAAZMVXDHI566JBSD25O5TRDM7LVID6YOXY",
                   },
                   operation: {
-                    href: "https://horizon-live.stellar.org:1337/operations/77434489365606401",
+                    href: "https://orbitr-live.lantah.network:1337/operations/77434489365606401",
                   },
                 },
                 id: "77434489365606401-1",
@@ -2273,7 +2273,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/accounts/GABJBA4HI4LVKWAYORE7SOAAZMVXDHI566JBSD25O5TRDM7LVID6YOXY/trades",
+              "https://orbitr-live.lantah.network:1337/accounts/GABJBA4HI4LVKWAYORE7SOAAZMVXDHI566JBSD25O5TRDM7LVID6YOXY/trades",
             ),
           )
           .returns(Promise.resolve({ data: tradesResponse }));
@@ -2299,13 +2299,13 @@ describe("server.js non-transaction tests", function () {
         let tradesResponse = {
           _links: {
             self: {
-              href: "https://horizon-live.stellar.org:1337/trades?order=asc&limit=1&cursor=64199539053039617-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?order=asc&limit=1&cursor=64199539053039617-0",
             },
             next: {
-              href: "https://horizon-live.stellar.org:1337/trades?order=asc&limit=1&cursor=64199676491993090-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?order=asc&limit=1&cursor=64199676491993090-0",
             },
             prev: {
-              href: "https://horizon-live.stellar.org:1337/trades?order=desc&limit=1&cursor=64199676491993090-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?order=desc&limit=1&cursor=64199676491993090-0",
             },
           },
           _embedded: {
@@ -2313,13 +2313,13 @@ describe("server.js non-transaction tests", function () {
               {
                 _links: {
                   base: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GBBHSWC3XSUFKEFDPQO346BCLM3EAJHICWRVSVIQOG4YBIH3A2VCJ6G2",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GBBHSWC3XSUFKEFDPQO346BCLM3EAJHICWRVSVIQOG4YBIH3A2VCJ6G2",
                   },
                   counter: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GDBXANSAUQ5WBFSA6LFQXR5PYVYAQ3T4KI4LHZ3YAAEFI3BS2Z3SFRVG",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GDBXANSAUQ5WBFSA6LFQXR5PYVYAQ3T4KI4LHZ3YAAEFI3BS2Z3SFRVG",
                   },
                   operation: {
-                    href: "https://horizon-live.stellar.org:1337/operations/64199676491993090",
+                    href: "https://orbitr-live.lantah.network:1337/operations/64199676491993090",
                   },
                 },
                 id: "64199676491993090-0",
@@ -2355,7 +2355,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/trades?order=asc&limit=1&cursor=64199539053039617-0",
+              "https://orbitr-live.lantah.network:1337/trades?order=asc&limit=1&cursor=64199539053039617-0",
             ),
           )
           .returns(Promise.resolve({ data: tradesResponse }));
@@ -2381,13 +2381,13 @@ describe("server.js non-transaction tests", function () {
         let tradesResponse = {
           _links: {
             self: {
-              href: "https://horizon-live.stellar.org:1337/trades?order=asc&limit=200&trade_type=orderbook&cursor=",
+              href: "https://orbitr-live.lantah.network:1337/trades?order=asc&limit=200&trade_type=orderbook&cursor=",
             },
             next: {
-              href: "https://horizon-live.stellar.org:1337/trades?order=asc&limit=200&trade_type=orderbook&cursor=64199539053039617-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?order=asc&limit=200&trade_type=orderbook&cursor=64199539053039617-0",
             },
             prev: {
-              href: "https://horizon-live.stellar.org:1337/trades?order=desc&limit=200&trade_type=orderbook&cursor=64199539053039617-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?order=desc&limit=200&trade_type=orderbook&cursor=64199539053039617-0",
             },
           },
           _embedded: {
@@ -2395,13 +2395,13 @@ describe("server.js non-transaction tests", function () {
               {
                 _links: {
                   base: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GB7JKG66CJN3ACX5DX43FOZTTSOI7GZUP547I3BSXIJVUX3NRYUXHE6W",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GB7JKG66CJN3ACX5DX43FOZTTSOI7GZUP547I3BSXIJVUX3NRYUXHE6W",
                   },
                   counter: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GC6APVH2HCFB7QLSTG3U55IYSW7ZRNSCTOZZYZJCNHWX2FONCNJNULYN",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GC6APVH2HCFB7QLSTG3U55IYSW7ZRNSCTOZZYZJCNHWX2FONCNJNULYN",
                   },
                   operation: {
-                    href: "https://horizon-live.stellar.org:1337/operations/64199539053039617",
+                    href: "https://orbitr-live.lantah.network:1337/operations/64199539053039617",
                   },
                 },
                 id: "64199539053039617-0",
@@ -2434,7 +2434,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/trades?trade_type=orderbook",
+              "https://orbitr-live.lantah.network:1337/trades?trade_type=orderbook",
             ),
           )
           .returns(Promise.resolve({ data: tradesResponse }));
@@ -2458,13 +2458,13 @@ describe("server.js non-transaction tests", function () {
         let tradesResponse = {
           _links: {
             self: {
-              href: "https://horizon-live.stellar.org:1337/trades?order=asc&limit=200&trade_type=liquidity_pool&cursor=",
+              href: "https://orbitr-live.lantah.network:1337/trades?order=asc&limit=200&trade_type=liquidity_pool&cursor=",
             },
             next: {
-              href: "https://horizon-live.stellar.org:1337/trades?order=asc&limit=200&trade_type=liquidity_pool&cursor=64199539053039617-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?order=asc&limit=200&trade_type=liquidity_pool&cursor=64199539053039617-0",
             },
             prev: {
-              href: "https://horizon-live.stellar.org:1337/trades?order=desc&limit=200&trade_type=liquidity_pool&cursor=64199539053039617-0",
+              href: "https://orbitr-live.lantah.network:1337/trades?order=desc&limit=200&trade_type=liquidity_pool&cursor=64199539053039617-0",
             },
           },
           _embedded: {
@@ -2472,13 +2472,13 @@ describe("server.js non-transaction tests", function () {
               {
                 _links: {
                   base: {
-                    href: "https://horizon-live.stellar.org:1337/accounts/GB7JKG66CJN3ACX5DX43FOZTTSOI7GZUP547I3BSXIJVUX3NRYUXHE6W",
+                    href: "https://orbitr-live.lantah.network:1337/accounts/GB7JKG66CJN3ACX5DX43FOZTTSOI7GZUP547I3BSXIJVUX3NRYUXHE6W",
                   },
                   counter: {
-                    href: "https://horizon-live.stellar.org:1337/liquidity_pool/dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380fac7",
+                    href: "https://orbitr-live.lantah.network:1337/liquidity_pool/dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380fac7",
                   },
                   operation: {
-                    href: "https://horizon-live.stellar.org:1337/operations/64199539053039617",
+                    href: "https://orbitr-live.lantah.network:1337/operations/64199539053039617",
                   },
                 },
                 id: "64199539053039617-0",
@@ -2512,7 +2512,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/trades?trade_type=liquidity_pool",
+              "https://orbitr-live.lantah.network:1337/trades?trade_type=liquidity_pool",
             ),
           )
           .returns(Promise.resolve({ data: tradesResponse }));
@@ -2610,7 +2610,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/paths/strict-receive?source_account=GARSFJNXJIHO6ULUBK3DBYKVSIZE7SC72S5DYBCHU7DKL22UXKVD7MXP&destination_amount=20.0&destination_asset_type=credit_alphanum4&destination_asset_code=EUR&destination_asset_issuer=GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN",
+              "https://orbitr-live.lantah.network:1337/paths/strict-receive?source_account=GARSFJNXJIHO6ULUBK3DBYKVSIZE7SC72S5DYBCHU7DKL22UXKVD7MXP&destination_amount=20.0&destination_asset_type=credit_alphanum4&destination_asset_code=EUR&destination_asset_issuer=GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN",
             ),
           )
           .returns(Promise.resolve({ data: pathsResponse }));
@@ -2618,7 +2618,7 @@ describe("server.js non-transaction tests", function () {
         this.server
           .strictReceivePaths(
             "GARSFJNXJIHO6ULUBK3DBYKVSIZE7SC72S5DYBCHU7DKL22UXKVD7MXP",
-            new StellarSdk.Asset(
+            new LantahSdk.Asset(
               "EUR",
               "GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN",
             ),
@@ -2645,18 +2645,18 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              `https://horizon-live.stellar.org:1337/paths/strict-receive?source_assets=${destinationAssets}&destination_amount=20.0&destination_asset_type=credit_alphanum4&destination_asset_code=EUR&destination_asset_issuer=GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN`,
+              `https://orbitr-live.lantah.network:1337/paths/strict-receive?source_assets=${destinationAssets}&destination_amount=20.0&destination_asset_type=credit_alphanum4&destination_asset_code=EUR&destination_asset_issuer=GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN`,
             ),
           )
           .returns(Promise.resolve({ data: pathsResponse }));
 
         let assets = [
-          StellarSdk.Asset.native(),
-          new StellarSdk.Asset(
+          LantahSdk.Asset.native(),
+          new LantahSdk.Asset(
             "EUR",
             "GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN",
           ),
-          new StellarSdk.Asset(
+          new LantahSdk.Asset(
             "USD",
             "GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN",
           ),
@@ -2665,7 +2665,7 @@ describe("server.js non-transaction tests", function () {
         this.server
           .strictReceivePaths(
             assets,
-            new StellarSdk.Asset(
+            new LantahSdk.Asset(
               "EUR",
               "GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN",
             ),
@@ -2763,14 +2763,14 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/paths/strict-send?source_asset_type=credit_alphanum4&source_asset_code=EUR&source_asset_issuer=GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN&source_amount=20.0&destination_account=GAEDTJ4PPEFVW5XV2S7LUXBEHNQMX5Q2GM562RJGOQG7GVCE5H3HIB4V",
+              "https://orbitr-live.lantah.network:1337/paths/strict-send?source_asset_type=credit_alphanum4&source_asset_code=EUR&source_asset_issuer=GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN&source_amount=20.0&destination_account=GAEDTJ4PPEFVW5XV2S7LUXBEHNQMX5Q2GM562RJGOQG7GVCE5H3HIB4V",
             ),
           )
           .returns(Promise.resolve({ data: pathsResponse }));
 
         this.server
           .strictSendPaths(
-            new StellarSdk.Asset(
+            new LantahSdk.Asset(
               "EUR",
               "GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN",
             ),
@@ -2798,18 +2798,18 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              `https://horizon-live.stellar.org:1337/paths/strict-send?source_asset_type=credit_alphanum4&source_asset_code=EUR&source_asset_issuer=GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN&source_amount=20.0&destination_assets=${destinationAssets}`,
+              `https://orbitr-live.lantah.network:1337/paths/strict-send?source_asset_type=credit_alphanum4&source_asset_code=EUR&source_asset_issuer=GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN&source_amount=20.0&destination_assets=${destinationAssets}`,
             ),
           )
           .returns(Promise.resolve({ data: pathsResponse }));
 
         let assets = [
-          StellarSdk.Asset.native(),
-          new StellarSdk.Asset(
+          LantahSdk.Asset.native(),
+          new LantahSdk.Asset(
             "EUR",
             "GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN",
           ),
-          new StellarSdk.Asset(
+          new LantahSdk.Asset(
             "USD",
             "GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN",
           ),
@@ -2817,7 +2817,7 @@ describe("server.js non-transaction tests", function () {
 
         this.server
           .strictSendPaths(
-            new StellarSdk.Asset(
+            new LantahSdk.Asset(
               "EUR",
               "GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN",
             ),
@@ -2882,7 +2882,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/effects?cursor=b",
+              "https://orbitr-live.lantah.network:1337/effects?cursor=b",
             ),
           )
           .returns(Promise.resolve({ data: effectsResponse }));
@@ -2909,7 +2909,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/accounts/GCGHCFUB6JKQE42C76BK2LYB3EHKP4WQJE624WTSL3CU2PPDYE5RBMJE/effects",
+              "https://orbitr-live.lantah.network:1337/accounts/GCGHCFUB6JKQE42C76BK2LYB3EHKP4WQJE624WTSL3CU2PPDYE5RBMJE/effects",
             ),
           )
           .returns(Promise.resolve({ data: effectsResponse }));
@@ -2938,7 +2938,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/transactions/ef37d6770c40c3bdb6adba80759f2819971396d1c3dfb7b5611f63ad72a9a4ae/effects",
+              "https://orbitr-live.lantah.network:1337/transactions/ef37d6770c40c3bdb6adba80759f2819971396d1c3dfb7b5611f63ad72a9a4ae/effects",
             ),
           )
           .returns(Promise.resolve({ data: effectsResponse }));
@@ -3023,7 +3023,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/operations/123456789",
+              "https://orbitr-live.lantah.network:1337/operations/123456789",
             ),
           )
           .returns(Promise.resolve({ data: operationsResponse }));
@@ -3050,7 +3050,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/accounts/GCGHCFUB6JKQE42C76BK2LYB3EHKP4WQJE624WTSL3CU2PPDYE5RBMJE/operations",
+              "https://orbitr-live.lantah.network:1337/accounts/GCGHCFUB6JKQE42C76BK2LYB3EHKP4WQJE624WTSL3CU2PPDYE5RBMJE/operations",
             ),
           )
           .returns(Promise.resolve({ data: operationsResponse }));
@@ -3079,7 +3079,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/claimable_balances/000000000102030000000000000000000000000000000000000000000000000000000000/operations",
+              "https://orbitr-live.lantah.network:1337/claimable_balances/000000000102030000000000000000000000000000000000000000000000000000000000/operations",
             ),
           )
           .returns(Promise.resolve({ data: operationsResponse }));
@@ -3108,7 +3108,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/ledgers/123456789/operations",
+              "https://orbitr-live.lantah.network:1337/ledgers/123456789/operations",
             ),
           )
           .returns(Promise.resolve({ data: operationsResponse }));
@@ -3135,7 +3135,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/transactions/blah/operations",
+              "https://orbitr-live.lantah.network:1337/transactions/blah/operations",
             ),
           )
           .returns(Promise.resolve({ data: operationsResponse }));
@@ -3211,7 +3211,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/accounts/GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K/payments",
+              "https://orbitr-live.lantah.network:1337/accounts/GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K/payments",
             ),
           )
           .returns(Promise.resolve({ data: paymentsResponse }));
@@ -3240,7 +3240,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/ledgers/123456789/payments",
+              "https://orbitr-live.lantah.network:1337/ledgers/123456789/payments",
             ),
           )
           .returns(Promise.resolve({ data: paymentsResponse }));
@@ -3267,7 +3267,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/transactions/77277606902d80a03a892536ebff8466726a4e55c3923ec2d3eeb3aa5bdc3731/payments",
+              "https://orbitr-live.lantah.network:1337/transactions/77277606902d80a03a892536ebff8466726a4e55c3923ec2d3eeb3aa5bdc3731/payments",
             ),
           )
           .returns(Promise.resolve({ data: paymentsResponse }));
@@ -3302,7 +3302,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/friendbot?addr=GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K",
+              "https://orbitr-live.lantah.network:1337/friendbot?addr=GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K",
             ),
           )
           .returns(Promise.resolve({ data: friendbotResponse }));
@@ -3324,10 +3324,10 @@ describe("server.js non-transaction tests", function () {
       let tradeAggregationResponse = {
         _links: {
           self: {
-            href: "https://horizon.stellar.org/trade_aggregations?base_asset_type=native\u0026counter_asset_type=credit_alphanum4\u0026counter_asset_code=BTC\u0026counter_asset_issuer=GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH\u0026start_time=1512689100000\u0026end_time=1512775500000\u0026resolution=300000",
+            href: "https://orbitr.lantah.network/trade_aggregations?base_asset_type=native\u0026counter_asset_type=credit_alphanum4\u0026counter_asset_code=BTC\u0026counter_asset_issuer=GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH\u0026start_time=1512689100000\u0026end_time=1512775500000\u0026resolution=300000",
           },
           next: {
-            href: "https://horizon.stellar.org/trade_aggregations?base_asset_type=native\u0026counter_asset_code=BTC\u0026counter_asset_issuer=GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH\u0026counter_asset_type=credit_alphanum4\u0026end_time=1512775500000\u0026resolution=300000\u0026start_time=1512765000000",
+            href: "https://orbitr.lantah.network/trade_aggregations?base_asset_type=native\u0026counter_asset_code=BTC\u0026counter_asset_issuer=GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH\u0026counter_asset_type=credit_alphanum4\u0026end_time=1512775500000\u0026resolution=300000\u0026start_time=1512765000000",
           },
           prev: {
             href: "",
@@ -3377,15 +3377,15 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/trade_aggregations?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=BTC&counter_asset_issuer=GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH&start_time=1512689100000&end_time=1512775500000&resolution=300000",
+              "https://orbitr-live.lantah.network:1337/trade_aggregations?base_asset_type=native&counter_asset_type=credit_alphanum4&counter_asset_code=BTC&counter_asset_issuer=GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH&start_time=1512689100000&end_time=1512775500000&resolution=300000",
             ),
           )
           .returns(Promise.resolve({ data: tradeAggregationResponse }));
 
         this.server
           .tradeAggregation(
-            StellarSdk.Asset.native(),
-            new StellarSdk.Asset(
+            LantahSdk.Asset.native(),
+            new LantahSdk.Asset(
               "BTC",
               "GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH",
             ),
@@ -3413,18 +3413,18 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=BTC&base_asset_issuer=GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH&counter_asset_type=native&start_time=1512689100000&end_time=1512775500000&resolution=300000",
+              "https://orbitr-live.lantah.network:1337/trade_aggregations?base_asset_type=credit_alphanum4&base_asset_code=BTC&base_asset_issuer=GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH&counter_asset_type=native&start_time=1512689100000&end_time=1512775500000&resolution=300000",
             ),
           )
           .returns(Promise.resolve({ data: tradeAggregationResponse }));
 
         this.server
           .tradeAggregation(
-            new StellarSdk.Asset(
+            new LantahSdk.Asset(
               "BTC",
               "GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH",
             ),
-            StellarSdk.Asset.native(),
+            LantahSdk.Asset.native(),
             1512689100000,
             1512775500000,
             300000,
@@ -3450,13 +3450,13 @@ describe("server.js non-transaction tests", function () {
         let assetsResponse = {
           _links: {
             self: {
-              href: "https://horizon-live.stellar.org:1337/assets?order=asc\u0026limit=1\u0026cursor=",
+              href: "https://orbitr-live.lantah.network:1337/assets?order=asc\u0026limit=1\u0026cursor=",
             },
             next: {
-              href: "https://horizon-live.stellar.org:1337/assets?order=asc\u0026limit=1\u0026cursor=9HORIZONS_GB2HXY7UEDCSHOWZ4553QFGFILNU73OFS2P4HU5IB3UUU66TWPBPVTGW_credit_alphanum12",
+              href: "https://orbitr-live.lantah.network:1337/assets?order=asc\u0026limit=1\u0026cursor=9ORBITRS_GB2HXY7UEDCSHOWZ4553QFGFILNU73OFS2P4HU5IB3UUU66TWPBPVTGW_credit_alphanum12",
             },
             prev: {
-              href: "https://horizon-live.stellar.org:1337/assets?order=desc\u0026limit=1\u0026cursor=9HORIZONS_GB2HXY7UEDCSHOWZ4553QFGFILNU73OFS2P4HU5IB3UUU66TWPBPVTGW_credit_alphanum12",
+              href: "https://orbitr-live.lantah.network:1337/assets?order=desc\u0026limit=1\u0026cursor=9ORBITRS_GB2HXY7UEDCSHOWZ4553QFGFILNU73OFS2P4HU5IB3UUU66TWPBPVTGW_credit_alphanum12",
             },
           },
           _embedded: {
@@ -3468,11 +3468,11 @@ describe("server.js non-transaction tests", function () {
                   },
                 },
                 asset_type: "credit_alphanum12",
-                asset_code: "9HORIZONS",
+                asset_code: "9ORBITRS",
                 asset_issuer:
                   "GB2HXY7UEDCSHOWZ4553QFGFILNU73OFS2P4HU5IB3UUU66TWPBPVTGW",
                 paging_token:
-                  "9HORIZONS_GB2HXY7UEDCSHOWZ4553QFGFILNU73OFS2P4HU5IB3UUU66TWPBPVTGW_credit_alphanum12",
+                  "9ORBITRS_GB2HXY7UEDCSHOWZ4553QFGFILNU73OFS2P4HU5IB3UUU66TWPBPVTGW_credit_alphanum12",
                 accounts: {
                   authorized: 2,
                   authorized_to_maintain_liabilities: 1,
@@ -3503,7 +3503,7 @@ describe("server.js non-transaction tests", function () {
         this.axiosMock
           .expects("get")
           .withArgs(
-            sinon.match("https://horizon-live.stellar.org:1337/assets?limit=1"),
+            sinon.match("https://orbitr-live.lantah.network:1337/assets?limit=1"),
           )
           .returns(Promise.resolve({ data: assetsResponse }));
 
@@ -3526,13 +3526,13 @@ describe("server.js non-transaction tests", function () {
         let assetsCodeResponse = {
           _links: {
             self: {
-              href: "https://horizon-live.stellar.org:1337/assets?order=asc\u0026limit=1\u0026cursor=\u0026asset_code=USD",
+              href: "https://orbitr-live.lantah.network:1337/assets?order=asc\u0026limit=1\u0026cursor=\u0026asset_code=USD",
             },
             next: {
-              href: "https://horizon-live.stellar.org:1337/assets?order=asc\u0026limit=1\u0026cursor=USD_GCYK67DDGBOANS6UODJ62QWGLEB2A7JQ3XUV25HCMLT7CI23PMMK3W6R_credit_alphanum4\u0026asset_code=USD",
+              href: "https://orbitr-live.lantah.network:1337/assets?order=asc\u0026limit=1\u0026cursor=USD_GCYK67DDGBOANS6UODJ62QWGLEB2A7JQ3XUV25HCMLT7CI23PMMK3W6R_credit_alphanum4\u0026asset_code=USD",
             },
             prev: {
-              href: "https://horizon-live.stellar.org:1337/assets?order=desc\u0026limit=1\u0026cursor=USD_GCYK67DDGBOANS6UODJ62QWGLEB2A7JQ3XUV25HCMLT7CI23PMMK3W6R_credit_alphanum4\u0026asset_code=USD",
+              href: "https://orbitr-live.lantah.network:1337/assets?order=desc\u0026limit=1\u0026cursor=USD_GCYK67DDGBOANS6UODJ62QWGLEB2A7JQ3XUV25HCMLT7CI23PMMK3W6R_credit_alphanum4\u0026asset_code=USD",
             },
           },
           _embedded: {
@@ -3579,7 +3579,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/assets?asset_code=USD&limit=1",
+              "https://orbitr-live.lantah.network:1337/assets?asset_code=USD&limit=1",
             ),
           )
           .returns(Promise.resolve({ data: assetsCodeResponse }));
@@ -3604,13 +3604,13 @@ describe("server.js non-transaction tests", function () {
         let assetIssuerResponse = {
           _links: {
             self: {
-              href: "http://horizon-testnet.stellar.org:1337/assets?order=asc\u0026limit=10\u0026cursor=\u0026asset_issuer=GCOGPF7IRVXUCJZAQWXVFQEE4HAOCTDGZI2QZSMKLM5BTTGRLY6GDOJN",
+              href: "http://orbitr-testnet.lantah.network:1337/assets?order=asc\u0026limit=10\u0026cursor=\u0026asset_issuer=GCOGPF7IRVXUCJZAQWXVFQEE4HAOCTDGZI2QZSMKLM5BTTGRLY6GDOJN",
             },
             next: {
-              href: "http://horizon-testnet.stellar.org:1337/assets?order=asc\u0026limit=10\u0026cursor=00acc1_GCOGPF7IRVXUCJZAQWXVFQEE4HAOCTDGZI2QZSMKLM5BTTGRLY6GDOJN_credit_alphanum12\u0026asset_issuer=GCOGPF7IRVXUCJZAQWXVFQEE4HAOCTDGZI2QZSMKLM5BTTGRLY6GDOJN",
+              href: "http://orbitr-testnet.lantah.network:1337/assets?order=asc\u0026limit=10\u0026cursor=00acc1_GCOGPF7IRVXUCJZAQWXVFQEE4HAOCTDGZI2QZSMKLM5BTTGRLY6GDOJN_credit_alphanum12\u0026asset_issuer=GCOGPF7IRVXUCJZAQWXVFQEE4HAOCTDGZI2QZSMKLM5BTTGRLY6GDOJN",
             },
             prev: {
-              href: "http://horizon-testnet.stellar.org:1337/assets?order=desc\u0026limit=10\u0026cursor=004d40_GCOGPF7IRVXUCJZAQWXVFQEE4HAOCTDGZI2QZSMKLM5BTTGRLY6GDOJN_credit_alphanum12\u0026asset_issuer=GCOGPF7IRVXUCJZAQWXVFQEE4HAOCTDGZI2QZSMKLM5BTTGRLY6GDOJN",
+              href: "http://orbitr-testnet.lantah.network:1337/assets?order=desc\u0026limit=10\u0026cursor=004d40_GCOGPF7IRVXUCJZAQWXVFQEE4HAOCTDGZI2QZSMKLM5BTTGRLY6GDOJN_credit_alphanum12\u0026asset_issuer=GCOGPF7IRVXUCJZAQWXVFQEE4HAOCTDGZI2QZSMKLM5BTTGRLY6GDOJN",
             },
           },
           _embedded: {
@@ -3657,7 +3657,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/assets?asset_issuer=GCOGPF7IRVXUCJZAQWXVFQEE4HAOCTDGZI2QZSMKLM5BTTGRLY6GDOJN&limit=1",
+              "https://orbitr-live.lantah.network:1337/assets?asset_issuer=GCOGPF7IRVXUCJZAQWXVFQEE4HAOCTDGZI2QZSMKLM5BTTGRLY6GDOJN&limit=1",
             ),
           )
           .returns(Promise.resolve({ data: assetIssuerResponse }));
@@ -3681,13 +3681,13 @@ describe("server.js non-transaction tests", function () {
       let assetCodeIssuerResponse = {
         _links: {
           self: {
-            href: "http://horizon-testnet.stellar.org/assets?order=asc\u0026limit=10\u0026cursor=\u0026asset_code=USD\u0026asset_issuer=GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR",
+            href: "http://orbitr-testnet.lantah.network/assets?order=asc\u0026limit=10\u0026cursor=\u0026asset_code=USD\u0026asset_issuer=GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR",
           },
           next: {
-            href: "http://horizon-testnet.stellar.org/assets?order=asc\u0026limit=10\u0026cursor=USD_GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR_credit_alphanum4\u0026asset_code=USD\u0026asset_issuer=GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR",
+            href: "http://orbitr-testnet.lantah.network/assets?order=asc\u0026limit=10\u0026cursor=USD_GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR_credit_alphanum4\u0026asset_code=USD\u0026asset_issuer=GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR",
           },
           prev: {
-            href: "http://horizon-testnet.stellar.org/assets?order=desc\u0026limit=10\u0026cursor=USD_GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR_credit_alphanum4\u0026asset_code=USD\u0026asset_issuer=GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR",
+            href: "http://orbitr-testnet.lantah.network/assets?order=desc\u0026limit=10\u0026cursor=USD_GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR_credit_alphanum4\u0026asset_code=USD\u0026asset_issuer=GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR",
           },
         },
         _embedded: {
@@ -3695,7 +3695,7 @@ describe("server.js non-transaction tests", function () {
             {
               _links: {
                 toml: {
-                  href: "https://bakalr/.well-known/stellar.toml",
+                  href: "https://bakalr/.well-known/lantah.toml",
                 },
               },
               asset_type: "credit_alphanum4",
@@ -3735,7 +3735,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/assets?asset_issuer=GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR&asset_code=USD",
+              "https://orbitr-live.lantah.network:1337/assets?asset_issuer=GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR&asset_code=USD",
             ),
           )
           .returns(Promise.resolve({ data: assetCodeIssuerResponse }));
@@ -3761,7 +3761,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/assets?asset_code=USD&asset_issuer=GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR",
+              "https://orbitr-live.lantah.network:1337/assets?asset_code=USD&asset_issuer=GBW3EZBZKRERB4JUDWGQPIBGHKJ4XPOFG2VQ2WTFR4F7TYC5WS7F3XGR",
             ),
           )
           .returns(Promise.resolve({ data: assetCodeIssuerResponse }));
@@ -3789,7 +3789,7 @@ describe("server.js non-transaction tests", function () {
           .expects("get")
           .withArgs(
             sinon.match(
-              "https://horizon-live.stellar.org:1337/accounts/GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K/effects",
+              "https://orbitr-live.lantah.network:1337/accounts/GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K/effects",
             ),
           )
           .returns(Promise.resolve({ data: {} }));

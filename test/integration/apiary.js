@@ -10,7 +10,7 @@ const MOCK_SERVER = "https://private-d133c-ammmock.apiary-mock.com";
 describe("tests the /liquidity_pools endpoint", function () {
   const lpId =
     "0569b19c75d7ecadce50501fffad6fe8ba4652455df9e1cc96dc408141124dd5";
-  const server = new StellarSdk.Server(MOCK_SERVER, { allowHttp: true });
+  const server = new LantahSdk.Server(MOCK_SERVER, { allowHttp: true });
 
   it("GET /", function (done) {
     chai
@@ -93,7 +93,7 @@ describe("tests the /liquidity_pools endpoint", function () {
 });
 
 describe("tests the /accounts endpoint", function () {
-  const server = new StellarSdk.Server(MOCK_SERVER, { allowHttp: true });
+  const server = new LantahSdk.Server(MOCK_SERVER, { allowHttp: true });
 
   it("GET /", function (done) {
     chai

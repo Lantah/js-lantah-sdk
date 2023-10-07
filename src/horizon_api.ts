@@ -1,7 +1,7 @@
-import { AssetType, MemoType } from "stellar-base";
+import { AssetType, MemoType } from "lantah-base";
 
 /* tslint:disable-next-line:no-namespace */
-export namespace Horizon {
+export namespace Orbitr {
   export interface ResponseLink {
     href: string;
     templated?: boolean;

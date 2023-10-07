@@ -2,13 +2,13 @@ const http = require("http");
 
 describe("federation-server.js tests", function () {
   beforeEach(function () {
-    this.server = new StellarSdk.FederationServer(
+    this.server = new LantahSdk.FederationServer(
       "https://acme.com:1337/federation",
       "stellar.org",
     );
 
     this.axiosMock = sinon.mock(axios);
-    StellarSdk.Config.setDefault();
+    LantahSdk.Config.setDefault();
   });
 
   afterEach(function () {
@@ -19,7 +19,7 @@ describe("federation-server.js tests", function () {
     it("throws error for insecure server", function () {
       expect(
         () =>
-          new StellarSdk.FederationServer(
+          new LantahSdk.FederationServer(
             "http://acme.com:1337/federation",
             "stellar.org",
           ),
@@ -29,7 +29,7 @@ describe("federation-server.js tests", function () {
     it("allow insecure server when opts.allowHttp flag is set", function () {
       expect(
         () =>
-          new StellarSdk.FederationServer(
+          new LantahSdk.FederationServer(
             "http://acme.com:1337/federation",
             "stellar.org",
             { allowHttp: true },
@@ -38,10 +38,10 @@ describe("federation-server.js tests", function () {
     });
 
     it("allow insecure server when global Config.allowHttp flag is set", function () {
-      StellarSdk.Config.setAllowHttp(true);
+      LantahSdk.Config.setAllowHttp(true);
       expect(
         () =>
-          new StellarSdk.FederationServer(
+          new LantahSdk.FederationServer(
             "http://acme.com:1337/federation",
             "stellar.org",
             { allowHttp: true },
@@ -181,7 +181,7 @@ describe("federation-server.js tests", function () {
     it("creates correct object", function (done) {
       this.axiosMock
         .expects("get")
-        .withArgs(sinon.match("https://acme.com/.well-known/stellar.toml"))
+        .withArgs(sinon.match("https://acme.com/.well-known/lantah.toml"))
         .returns(
           Promise.resolve({
             data: `
@@ -192,7 +192,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
           }),
         );
 
-      StellarSdk.FederationServer.createForDomain("acme.com").then(
+      LantahSdk.FederationServer.createForDomain("acme.com").then(
         (federationServer) => {
           expect(federationServer.serverURL.protocol()).equals("https");
           expect(federationServer.serverURL.hostname()).equals(
@@ -205,19 +205,19 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
       );
     });
 
-    it("fails when stellar.toml does not contain federation server info", function (done) {
+    it("fails when lantah.toml does not contain federation server info", function (done) {
       this.axiosMock
         .expects("get")
-        .withArgs(sinon.match("https://acme.com/.well-known/stellar.toml"))
+        .withArgs(sinon.match("https://acme.com/.well-known/lantah.toml"))
         .returns(
           Promise.resolve({
             data: "",
           }),
         );
 
-      StellarSdk.FederationServer.createForDomain("acme.com")
+      LantahSdk.FederationServer.createForDomain("acme.com")
         .should.be.rejectedWith(
-          /stellar.toml does not contain FEDERATION_SERVER field/,
+          /lantah.toml does not contain FEDERATION_SERVER field/,
         )
         .and.notify(done);
     });
@@ -225,7 +225,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
 
   describe("FederationServer.resolve", function () {
     it("succeeds for a valid account ID", function (done) {
-      StellarSdk.FederationServer.resolve(
+      LantahSdk.FederationServer.resolve(
         "GAFSZ3VPBC2H2DVKCEWLN3PQWZW6BVDMFROWJUDAJ3KWSOKQIJ4R5W4J",
       )
         .should.eventually.deep.equal({
@@ -236,7 +236,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
     });
 
     it("fails for invalid account ID", function (done) {
-      StellarSdk.FederationServer.resolve("invalid")
+      LantahSdk.FederationServer.resolve("invalid")
         .should.be.rejectedWith(/Invalid Account ID/)
         .notify(done);
     });
@@ -244,7 +244,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
     it("succeeds for a valid Stellar address", function (done) {
       this.axiosMock
         .expects("get")
-        .withArgs(sinon.match("https://stellar.org/.well-known/stellar.toml"))
+        .withArgs(sinon.match("https://lantah.network/.well-known/lantah.toml"))
         .returns(
           Promise.resolve({
             data: `
@@ -274,7 +274,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
           }),
         );
 
-      StellarSdk.FederationServer.resolve("bob*stellar.org")
+      LantahSdk.FederationServer.resolve("bob*stellar.org")
         .should.eventually.deep.equal({
           stellar_address: "bob*stellar.org",
           account_id:
@@ -286,7 +286,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
     });
 
     it("fails for invalid Stellar address", function (done) {
-      StellarSdk.FederationServer.resolve("bob*stellar.org*test")
+      LantahSdk.FederationServer.resolve("bob*stellar.org*test")
         .should.be.rejectedWith(/Invalid Stellar address/)
         .notify(done);
     });
@@ -322,7 +322,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
       if (typeof window != "undefined") {
         return done();
       }
-      var response = Array(StellarSdk.FEDERATION_RESPONSE_MAX_SIZE + 10).join(
+      var response = Array(LantahSdk.FEDERATION_RESPONSE_MAX_SIZE + 10).join(
         "a",
       );
       let tempServer = http
@@ -331,7 +331,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
           res.end(response);
         })
         .listen(4444, () => {
-          new StellarSdk.FederationServer(
+          new LantahSdk.FederationServer(
             "http://localhost:4444/federation",
             "stellar.org",
             { allowHttp: true },
@@ -348,14 +348,14 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
 
   describe("FederationServer times out when response lags and timeout set", function () {
     afterEach(function () {
-      StellarSdk.Config.setDefault();
+      LantahSdk.Config.setDefault();
     });
 
     let opts = { allowHttp: true };
     let message;
     for (let i = 0; i < 2; i++) {
       if (i === 0) {
-        StellarSdk.Config.setTimeout(1000);
+        LantahSdk.Config.setTimeout(1000);
         message = "with global config set";
       } else {
         opts = { allowHttp: true, timeout: 1000 };
@@ -373,7 +373,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
             setTimeout(() => {}, 10000);
           })
           .listen(4444, () => {
-            new StellarSdk.FederationServer(
+            new LantahSdk.FederationServer(
               "http://localhost:4444/federation",
               "stellar.org",
               opts,
@@ -395,7 +395,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
             setTimeout(() => {}, 10000);
           })
           .listen(4444, () => {
-            new StellarSdk.FederationServer(
+            new LantahSdk.FederationServer(
               "http://localhost:4444/federation",
               "stellar.org",
               opts,
@@ -419,7 +419,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
             setTimeout(() => {}, 10000);
           })
           .listen(4444, () => {
-            new StellarSdk.FederationServer(
+            new LantahSdk.FederationServer(
               "http://localhost:4444/federation",
               "stellar.org",
               opts,
@@ -443,7 +443,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
             setTimeout(() => {}, 10000);
           })
           .listen(4444, () => {
-            StellarSdk.FederationServer.createForDomain("localhost:4444", opts)
+            LantahSdk.FederationServer.createForDomain("localhost:4444", opts)
               .should.be.rejectedWith(/timeout of 1000ms exceeded/)
               .notify(done)
               .then(() => tempServer.close());
@@ -461,7 +461,7 @@ FEDERATION_SERVER="https://api.stellar.org/federation"
             setTimeout(() => {}, 10000);
           })
           .listen(4444, () => {
-            StellarSdk.FederationServer.resolve("bob*localhost:4444", opts)
+            LantahSdk.FederationServer.resolve("bob*localhost:4444", opts)
               .should.eventually.be.rejectedWith(/timeout of 1000ms exceeded/)
               .notify(done)
               .then(() => tempServer.close());

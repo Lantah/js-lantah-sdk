@@ -15,8 +15,8 @@ jobs:
       - name: Checkout Base
         uses: actions/checkout@v3
         with:
-          repository: stellar/js-stellar-base
-          path: js-stellar-base
+          repository: lantah/js-lantah-base
+          path: js-lantah-base
 
       - name: Install Node (16.x)
         uses: actions/setup-node@v3
@@ -32,7 +32,7 @@ jobs:
       - name: Checkout GH pages
         uses: actions/checkout@v3
         with:
-          repository: stellar/js-stellar-sdk
+          repository: lantah/js-lantah-sdk
           ref: gh-pages
           path: jsdoc
 

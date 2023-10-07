@@ -1,26 +1,26 @@
 describe("server.js transaction tests", function () {
-  let keypair = StellarSdk.Keypair.random();
-  let account = new StellarSdk.Account(keypair.publicKey(), "56199647068161");
+  let keypair = LantahSdk.Keypair.random();
+  let account = new LantahSdk.Account(keypair.publicKey(), "56199647068161");
 
   beforeEach(function () {
-    this.server = new StellarSdk.Server(
-      "https://horizon-live.stellar.org:1337",
+    this.server = new LantahSdk.Server(
+      "https://orbitr-live.lantah.network:1337",
     );
-    this.axiosMock = sinon.mock(HorizonAxiosClient);
-    let transaction = new StellarSdk.TransactionBuilder(account, {
+    this.axiosMock = sinon.mock(OrbitrAxiosClient);
+    let transaction = new LantahSdk.TransactionBuilder(account, {
       fee: 100,
-      networkPassphrase: StellarSdk.Networks.TESTNET,
+      networkPassphrase: LantahSdk.Networks.TESTNET,
       v1: true,
     })
       .addOperation(
-        StellarSdk.Operation.payment({
+        LantahSdk.Operation.payment({
           destination:
             "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW",
-          asset: StellarSdk.Asset.native(),
+          asset: LantahSdk.Asset.native(),
           amount: "100.50",
         }),
       )
-      .setTimeout(StellarSdk.TimeoutInfinite)
+      .setTimeout(LantahSdk.TimeoutInfinite)
       .build();
     transaction.sign(keypair);
 
@@ -39,7 +39,7 @@ describe("server.js transaction tests", function () {
     this.axiosMock
       .expects("post")
       .withArgs(
-        "https://horizon-live.stellar.org:1337/transactions",
+        "https://orbitr-live.lantah.network:1337/transactions",
         `tx=${this.blob}`,
       )
       .returns(Promise.resolve({ data: {} }));
@@ -57,7 +57,7 @@ describe("server.js transaction tests", function () {
     const response = {
       _links: {
         transaction: {
-          href: "https://horizon.stellar.org/transactions/db2c69a07be57eb5baefbfbb72b95c7c20d2c4d6f2a0e84e7c27dd0359055a2f",
+          href: "https://orbitr.lantah.network/transactions/db2c69a07be57eb5baefbfbb72b95c7c20d2c4d6f2a0e84e7c27dd0359055a2f",
         },
       },
       hash: "db2c69a07be57eb5baefbfbb72b95c7c20d2c4d6f2a0e84e7c27dd0359055a2f",
@@ -72,7 +72,7 @@ describe("server.js transaction tests", function () {
     this.axiosMock
       .expects("post")
       .withArgs(
-        "https://horizon-live.stellar.org:1337/transactions",
+        "https://orbitr-live.lantah.network:1337/transactions",
         `tx=${this.blob}`,
       )
       .returns(Promise.resolve({ data: response }));
@@ -102,7 +102,7 @@ describe("server.js transaction tests", function () {
     const response = {
       _links: {
         transaction: {
-          href: "https://horizon.stellar.org/transactions/d88ded94c558790f7e819b85fd35adb10a1e474312c34ebd611495c349a8eb69",
+          href: "https://orbitr.lantah.network/transactions/d88ded94c558790f7e819b85fd35adb10a1e474312c34ebd611495c349a8eb69",
         },
       },
       hash: "d88ded94c558790f7e819b85fd35adb10a1e474312c34ebd611495c349a8eb69",
@@ -118,7 +118,7 @@ describe("server.js transaction tests", function () {
     this.axiosMock
       .expects("post")
       .withArgs(
-        "https://horizon-live.stellar.org:1337/transactions",
+        "https://orbitr-live.lantah.network:1337/transactions",
         `tx=${this.blob}`,
       )
       .returns(Promise.resolve({ data: response }));
@@ -146,7 +146,7 @@ describe("server.js transaction tests", function () {
     const response = {
       _links: {
         transaction: {
-          href: "https://horizon.stellar.org/transactions/e1c2b91141d8c4185dc8c18118f345a269d88c476bdadec695c1b3ecdc999831",
+          href: "https://orbitr.lantah.network/transactions/e1c2b91141d8c4185dc8c18118f345a269d88c476bdadec695c1b3ecdc999831",
         },
       },
       hash: "e1c2b91141d8c4185dc8c18118f345a269d88c476bdadec695c1b3ecdc999831",
@@ -162,7 +162,7 @@ describe("server.js transaction tests", function () {
     this.axiosMock
       .expects("post")
       .withArgs(
-        "https://horizon-live.stellar.org:1337/transactions",
+        "https://orbitr-live.lantah.network:1337/transactions",
         `tx=${this.blob}`,
       )
       .returns(Promise.resolve({ data: response }));
@@ -190,7 +190,7 @@ describe("server.js transaction tests", function () {
     const response = {
       _links: {
         transaction: {
-          href: "https://horizon.stellar.org/transactions/28552ba6a70ab74f6de05319950e2ddad94491159ebc97b14cfcde2d3c7e70a1",
+          href: "https://orbitr.lantah.network/transactions/28552ba6a70ab74f6de05319950e2ddad94491159ebc97b14cfcde2d3c7e70a1",
         },
       },
       hash: "28552ba6a70ab74f6de05319950e2ddad94491159ebc97b14cfcde2d3c7e70a1",
@@ -206,7 +206,7 @@ describe("server.js transaction tests", function () {
     this.axiosMock
       .expects("post")
       .withArgs(
-        "https://horizon-live.stellar.org:1337/transactions",
+        "https://orbitr-live.lantah.network:1337/transactions",
         `tx=${this.blob}`,
       )
       .returns(Promise.resolve({ data: response }));
@@ -245,7 +245,7 @@ describe("server.js transaction tests", function () {
     const response = {
       _links: {
         transaction: {
-          href: "https://horizon.stellar.org/transactions/6c3191f252f2c586c74275c766ce761021513e520eab3bb63d3fd18d0d01492e",
+          href: "https://orbitr.lantah.network/transactions/6c3191f252f2c586c74275c766ce761021513e520eab3bb63d3fd18d0d01492e",
         },
       },
       hash: "6c3191f252f2c586c74275c766ce761021513e520eab3bb63d3fd18d0d01492e",
@@ -260,7 +260,7 @@ describe("server.js transaction tests", function () {
     this.axiosMock
       .expects("post")
       .withArgs(
-        "https://horizon-live.stellar.org:1337/transactions",
+        "https://orbitr-live.lantah.network:1337/transactions",
         `tx=${this.blob}`,
       )
       .returns(Promise.resolve({ data: response }));
@@ -279,7 +279,7 @@ describe("server.js transaction tests", function () {
     const response = {
       _links: {
         transaction: {
-          href: "https://horizon.stellar.org/transactions/6a22d6896140f6f330ef19086827df0780eb2ad3324f3271b38c70cb1cba1c3d",
+          href: "https://orbitr.lantah.network/transactions/6a22d6896140f6f330ef19086827df0780eb2ad3324f3271b38c70cb1cba1c3d",
         },
       },
       hash: "6a22d6896140f6f330ef19086827df0780eb2ad3324f3271b38c70cb1cba1c3d",
@@ -295,7 +295,7 @@ describe("server.js transaction tests", function () {
     this.axiosMock
       .expects("post")
       .withArgs(
-        "https://horizon-live.stellar.org:1337/transactions",
+        "https://orbitr-live.lantah.network:1337/transactions",
         `tx=${this.blob}`,
       )
       .returns(Promise.resolve({ data: response }));
@@ -321,7 +321,7 @@ describe("server.js transaction tests", function () {
     this.axiosMock
       .expects("post")
       .withArgs(
-        "https://horizon-live.stellar.org:1337/transactions",
+        "https://orbitr-live.lantah.network:1337/transactions",
         `tx=${this.blob}`,
       )
       .returns(Promise.resolve({ data: {} }));
@@ -329,7 +329,7 @@ describe("server.js transaction tests", function () {
       .expects("get")
       .withArgs(
         sinon.match(
-          "https://horizon-live.stellar.org:1337/accounts/GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW",
+          "https://orbitr-live.lantah.network:1337/accounts/GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW",
         ),
       )
       .returns(
@@ -349,11 +349,11 @@ describe("server.js transaction tests", function () {
       });
   });
   it("submits fee bump transactions", function (done) {
-    const feeBumpTx = StellarSdk.TransactionBuilder.buildFeeBumpTransaction(
+    const feeBumpTx = LantahSdk.TransactionBuilder.buildFeeBumpTransaction(
       keypair,
       "200",
       this.transaction,
-      StellarSdk.Networks.TESTNET,
+      LantahSdk.Networks.TESTNET,
     );
 
     this.blob = encodeURIComponent(
@@ -363,7 +363,7 @@ describe("server.js transaction tests", function () {
     this.axiosMock
       .expects("post")
       .withArgs(
-        "https://horizon-live.stellar.org:1337/transactions",
+        "https://orbitr-live.lantah.network:1337/transactions",
         `tx=${this.blob}`,
       )
       .returns(Promise.resolve({ data: {} }));

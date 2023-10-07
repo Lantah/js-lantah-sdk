@@ -1,7 +1,7 @@
 /* tslint:disable:variable-name */
 
-import { Account as BaseAccount } from "stellar-base";
-import { Horizon } from "./horizon_api";
+import { Account as BaseAccount } from "lantah-base";
+import { Orbitr } from "./orbitr_api";
 import { ServerApi } from "./server_api";
 
 /**
@@ -12,7 +12,7 @@ import { ServerApi } from "./server_api";
  * It also contains {@link Account} object and exposes it's methods so can be used in {@link TransactionBuilder}.
  *
  * @see [Account Details](https://developers.stellar.org/api/resources/accounts/object/)
- * @param {string} response Response from horizon account endpoint.
+ * @param {string} response Response from orbitr account endpoint.
  * @returns {AccountResponse} AccountResponse instance
  */
 export class AccountResponse {
@@ -27,9 +27,9 @@ export class AccountResponse {
   public readonly inflation_destination?: string;
   public readonly last_modified_ledger!: number;
   public readonly last_modified_time!: string;
-  public readonly thresholds!: Horizon.AccountThresholds;
-  public readonly flags!: Horizon.Flags;
-  public readonly balances!: Horizon.BalanceLine[];
+  public readonly thresholds!: Orbitr.AccountThresholds;
+  public readonly flags!: Orbitr.Flags;
+  public readonly balances!: Orbitr.BalanceLine[];
   public readonly signers!: ServerApi.AccountRecordSigners[];
   public readonly data!: (options: {
     value: string;

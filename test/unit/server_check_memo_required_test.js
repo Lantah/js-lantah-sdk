@@ -1,30 +1,30 @@
 function buildTransaction(destination, operations = [], builderOpts = {}) {
   let txBuilderOpts = {
     fee: 100,
-    networkPassphrase: StellarSdk.Networks.TESTNET,
+    networkPassphrase: LantahSdk.Networks.TESTNET,
     v1: true,
   };
   Object.assign(txBuilderOpts, builderOpts);
-  let keypair = StellarSdk.Keypair.random();
-  let account = new StellarSdk.Account(keypair.publicKey(), "56199647068161");
-  let transaction = new StellarSdk.TransactionBuilder(
+  let keypair = LantahSdk.Keypair.random();
+  let account = new LantahSdk.Account(keypair.publicKey(), "56199647068161");
+  let transaction = new LantahSdk.TransactionBuilder(
     account,
     txBuilderOpts,
   ).addOperation(
-    StellarSdk.Operation.payment({
+    LantahSdk.Operation.payment({
       destination: destination,
-      asset: StellarSdk.Asset.native(),
+      asset: LantahSdk.Asset.native(),
       amount: "100.50",
     }),
   );
 
   operations.forEach((op) => (transaction = transaction.addOperation(op)));
 
-  transaction = transaction.setTimeout(StellarSdk.TimeoutInfinite).build();
+  transaction = transaction.setTimeout(LantahSdk.TimeoutInfinite).build();
   transaction.sign(keypair);
 
   if (builderOpts.feeBump) {
-    return StellarSdk.TransactionBuilder.buildFeeBumpTransaction(
+    return LantahSdk.TransactionBuilder.buildFeeBumpTransaction(
       keypair,
       "200",
       transaction,
@@ -39,7 +39,7 @@ function buildAccount(id, data = {}) {
   return {
     _links: {
       data: {
-        href: `https://horizon-testnet.stellar.org/accounts/${id}/data/{key}`,
+        href: `https://orbitr-testnet.lantah.network/accounts/${id}/data/{key}`,
         templated: true,
       },
     },
@@ -98,15 +98,15 @@ function mockAccountRequest(axiosMock, id, status, data = {}) {
 
   axiosMock
     .expects("get")
-    .withArgs(sinon.match(`https://horizon-testnet.stellar.org/accounts/${id}`))
+    .withArgs(sinon.match(`https://orbitr-testnet.lantah.network/accounts/${id}`))
     .returns(response)
     .once();
 }
 
 describe("server.js check-memo-required", function () {
   beforeEach(function () {
-    this.server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
-    this.axiosMock = sinon.mock(HorizonAxiosClient);
+    this.server = new LantahSdk.Server("https://orbitr-testnet.lantah.network");
+    this.axiosMock = sinon.mock(OrbitrAxiosClient);
   });
 
   afterEach(function () {
@@ -128,7 +128,7 @@ describe("server.js check-memo-required", function () {
           expect.fail("promise should have failed");
         },
         function (err) {
-          expect(err).to.be.instanceOf(StellarSdk.AccountRequiresMemoError);
+          expect(err).to.be.instanceOf(LantahSdk.AccountRequiresMemoError);
           expect(err.accountId).to.eq(accountId);
           expect(err.operationIndex).to.eq(0);
           done();
@@ -153,7 +153,7 @@ describe("server.js check-memo-required", function () {
           expect.fail("promise should have failed");
         },
         function (err) {
-          expect(err).to.be.instanceOf(StellarSdk.AccountRequiresMemoError);
+          expect(err).to.be.instanceOf(LantahSdk.AccountRequiresMemoError);
           expect(err.accountId).to.eq(accountId);
           expect(err.operationIndex).to.eq(0);
           done();
@@ -206,7 +206,7 @@ describe("server.js check-memo-required", function () {
           expect.fail("promise should have failed");
         },
         function (err) {
-          expect(err).to.be.instanceOf(StellarSdk.NetworkError);
+          expect(err).to.be.instanceOf(LantahSdk.NetworkError);
           done();
         },
       )
@@ -220,9 +220,9 @@ describe("server.js check-memo-required", function () {
     mockAccountRequest(this.axiosMock, accountId, 200, {});
 
     let operations = [
-      StellarSdk.Operation.payment({
+      LantahSdk.Operation.payment({
         destination: accountId,
-        asset: StellarSdk.Asset.native(),
+        asset: LantahSdk.Asset.native(),
         amount: "100.50",
       }),
     ];
@@ -249,40 +249,40 @@ describe("server.js check-memo-required", function () {
       "GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ",
     ];
 
-    const usd = new StellarSdk.Asset(
+    const usd = new LantahSdk.Asset(
       "USD",
       "GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB",
     );
-    const eur = new StellarSdk.Asset(
+    const eur = new LantahSdk.Asset(
       "EUR",
       "GDTNXRLOJD2YEBPKK7KCMR7J33AAG5VZXHAJTHIG736D6LVEFLLLKPDL",
     );
-    const liquidityPoolAsset = new StellarSdk.LiquidityPoolAsset(eur, usd, 30);
+    const liquidityPoolAsset = new LantahSdk.LiquidityPoolAsset(eur, usd, 30);
 
     let operations = [
-      StellarSdk.Operation.accountMerge({
+      LantahSdk.Operation.accountMerge({
         destination: destinations[0],
       }),
-      StellarSdk.Operation.pathPaymentStrictReceive({
-        sendAsset: StellarSdk.Asset.native(),
+      LantahSdk.Operation.pathPaymentStrictReceive({
+        sendAsset: LantahSdk.Asset.native(),
         sendMax: "5.0000000",
         destination: destinations[1],
-        destAsset: StellarSdk.Asset.native(),
+        destAsset: LantahSdk.Asset.native(),
         destAmount: "5.50",
         path: [usd, eur],
       }),
-      StellarSdk.Operation.pathPaymentStrictSend({
-        sendAsset: StellarSdk.Asset.native(),
+      LantahSdk.Operation.pathPaymentStrictSend({
+        sendAsset: LantahSdk.Asset.native(),
         sendAmount: "5.0000000",
         destination: destinations[2],
-        destAsset: StellarSdk.Asset.native(),
+        destAsset: LantahSdk.Asset.native(),
         destMin: "5.50",
         path: [usd, eur],
       }),
-      StellarSdk.Operation.changeTrust({
+      LantahSdk.Operation.changeTrust({
         asset: usd,
       }),
-      StellarSdk.Operation.changeTrust({
+      LantahSdk.Operation.changeTrust({
         asset: liquidityPoolAsset,
       }),
     ];
@@ -302,7 +302,7 @@ describe("server.js check-memo-required", function () {
   });
   it("checks for memo required by default", function (done) {
     let accountId = "GAYHAAKPAQLMGIJYMIWPDWCGUCQ5LAWY4Q7Q3IKSP57O7GUPD3NEOSEA";
-    let memo = StellarSdk.Memo.text("42");
+    let memo = LantahSdk.Memo.text("42");
     let transaction = buildTransaction(accountId, [], { memo });
     this.server
       .checkMemoRequired(transaction)

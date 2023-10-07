@@ -14,7 +14,7 @@ describe("integration tests: client headers", function (done) {
     let server;
 
     const requestHandler = (request, response) => {
-      expect(request.headers["x-client-name"]).to.be.equal("js-stellar-sdk");
+      expect(request.headers["x-client-name"]).to.be.equal("js-lantah-sdk");
       expect(request.headers["x-client-version"]).to.match(versionPattern);
       response.end();
       server.close(() => done());
@@ -27,7 +27,7 @@ describe("integration tests: client headers", function (done) {
         return;
       }
 
-      new StellarSdk.Server(`http://localhost:${port}`, { allowHttp: true })
+      new LantahSdk.Server(`http://localhost:${port}`, { allowHttp: true })
         .operations()
         .call();
     });
@@ -40,7 +40,7 @@ describe("integration tests: client headers", function (done) {
     const requestHandler = (request, response) => {
       // eslint-disable-next-line node/no-deprecated-api
       let query = url.parse(request.url, true).query;
-      expect(query["X-Client-Name"]).to.be.equal("js-stellar-sdk");
+      expect(query["X-Client-Name"]).to.be.equal("js-lantah-sdk");
       expect(query["X-Client-Version"]).to.match(versionPattern);
       response.end();
       server.close(() => {
@@ -56,7 +56,7 @@ describe("integration tests: client headers", function (done) {
         return;
       }
 
-      closeStream = new StellarSdk.Server(`http://localhost:${port}`, {
+      closeStream = new LantahSdk.Server(`http://localhost:${port}`, {
         allowHttp: true,
       })
         .operations()

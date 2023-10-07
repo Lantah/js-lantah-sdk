@@ -5,10 +5,10 @@
 const version = require("../package.json").version;
 
 // Expose all types
-export * from "./horizon_api";
+export * from "./orbitr_api";
 export * from "./server_api";
 
-// stellar-sdk classes to expose
+// lantah-sdk classes to expose
 export * from "./account_response";
 export * from "./errors";
 export { Config } from "./config";
@@ -18,18 +18,18 @@ export {
   FEDERATION_RESPONSE_MAX_SIZE
 } from "./federation_server";
 export {
-  StellarTomlResolver,
+  LantahTomlResolver,
   STELLAR_TOML_MAX_SIZE
 } from "./stellar_toml_resolver";
 export {
-  default as HorizonAxiosClient,
+  default as OrbitrAxiosClient,
   SERVER_TIME_MAP,
   getCurrentServerTime
-} from "./horizon_axios_client";
+} from "./orbitr_axios_client";
 export * from "./utils";
 
-// expose classes and functions from stellar-base
-export * from "stellar-base";
+// expose classes and functions from lantah-base
+export * from "lantah-base";
 
 export { version };
 

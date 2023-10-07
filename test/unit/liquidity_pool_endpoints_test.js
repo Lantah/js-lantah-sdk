@@ -3,14 +3,14 @@ function copyJson(js) {
   return JSON.parse(JSON.stringify(js));
 }
 
-const BASE_URL = "https://horizon-live.stellar.org:1337";
+const BASE_URL = "https://orbitr-live.lantah.network:1337";
 const LP_URL = BASE_URL + "/liquidity_pools";
 
 describe("/liquidity_pools tests", function () {
   beforeEach(function () {
-    this.server = new StellarSdk.Server(BASE_URL);
-    this.axiosMock = sinon.mock(HorizonAxiosClient);
-    StellarSdk.Config.setDefault();
+    this.server = new LantahSdk.Server(BASE_URL);
+    this.axiosMock = sinon.mock(OrbitrAxiosClient);
+    LantahSdk.Config.setDefault();
   });
 
   afterEach(function () {
@@ -86,11 +86,11 @@ describe("/liquidity_pools tests", function () {
   let phpResponse = copyJson(rootResponse);
   phpResponse._embedded.records.pop(); // last elem doesn't have PHP asset
 
-  const EURT = new StellarSdk.Asset(
+  const EURT = new LantahSdk.Asset(
     "EURT",
     "GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S",
   );
-  const PHP = new StellarSdk.Asset(
+  const PHP = new LantahSdk.Asset(
     "PHP",
     "GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S",
   );
@@ -114,7 +114,7 @@ describe("/liquidity_pools tests", function () {
   describe("filters", function () {
     const testCases = [
       {
-        assets: [StellarSdk.Asset.native()],
+        assets: [LantahSdk.Asset.native()],
         response: emptyResponse,
       },
       {

@@ -3,12 +3,12 @@ module.exports = {
     mocha: true,
   },
   globals: {
-    StellarSdk: true,
+    LantahSdk: true,
     axios: true,
     chai: true,
     sinon: true,
     expect: true,
-    HorizonAxiosClient: true,
+    OrbitrAxiosClient: true,
   },
   rules: {
     "no-unused-vars": 0,

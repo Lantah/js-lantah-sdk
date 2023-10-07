@@ -11,7 +11,7 @@ describe("Utils", function () {
     clock = sinon.useFakeTimers();
     txBuilderOpts = {
       fee: 100,
-      networkPassphrase: StellarSdk.Networks.TESTNET,
+      networkPassphrase: LantahSdk.Networks.TESTNET,
     };
   });
 
@@ -21,62 +21,62 @@ describe("Utils", function () {
 
   describe("Utils.buildChallengeTx", function () {
     it("allows non-muxed accounts", function () {
-      let keypair = StellarSdk.Keypair.random();
+      let keypair = LantahSdk.Keypair.random();
       let muxedAddress =
         "MAAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITLVL6";
       let challenge;
       expect(
         () =>
-          (challenge = StellarSdk.Utils.buildChallengeTx(
+          (challenge = LantahSdk.Utils.buildChallengeTx(
             keypair,
             "MAAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITLVL6",
             "testanchor.stellar.org",
             300,
-            StellarSdk.Networks.TESTNET,
+            LantahSdk.Networks.TESTNET,
             "testanchor.stellar.org",
           )),
       ).not.to.throw();
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         true,
       );
       expect(transaction.operations[0].source).to.equal(muxedAddress);
     });
 
     it("allows ID memos", function () {
-      let keypair = StellarSdk.Keypair.random();
+      let keypair = LantahSdk.Keypair.random();
       let challenge;
       expect(
         () =>
-          (challenge = StellarSdk.Utils.buildChallengeTx(
+          (challenge = LantahSdk.Utils.buildChallengeTx(
             keypair,
-            StellarSdk.Keypair.random().publicKey(),
+            LantahSdk.Keypair.random().publicKey(),
             "testanchor.stellar.org",
             300,
-            StellarSdk.Networks.TESTNET,
+            LantahSdk.Networks.TESTNET,
             "testanchor.stellar.org",
             "8884404377665521220",
           )),
       ).not.to.throw();
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         true,
       );
       expect(transaction.memo.value).to.equal("8884404377665521220");
     });
 
     it("disallows non-ID memos", function () {
-      let keypair = StellarSdk.Keypair.random();
+      let keypair = LantahSdk.Keypair.random();
       expect(
         () =>
-          (challenge = StellarSdk.Utils.buildChallengeTx(
+          (challenge = LantahSdk.Utils.buildChallengeTx(
             keypair,
-            StellarSdk.Keypair.random().publicKey(),
+            LantahSdk.Keypair.random().publicKey(),
             "testanchor.stellar.org",
             300,
-            StellarSdk.Networks.TESTNET,
+            LantahSdk.Networks.TESTNET,
             "testanchor.stellar.org",
             "memo text",
           )),
@@ -84,17 +84,17 @@ describe("Utils", function () {
     });
 
     it("disallows memos with muxed accounts", function () {
-      let keypair = StellarSdk.Keypair.random();
+      let keypair = LantahSdk.Keypair.random();
       const muxedAddress =
         "MAAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITLVL6";
       expect(
         () =>
-          (challenge = StellarSdk.Utils.buildChallengeTx(
+          (challenge = LantahSdk.Utils.buildChallengeTx(
             keypair,
             muxedAddress,
             "testanchor.stellar.org",
             300,
-            StellarSdk.Networks.TESTNET,
+            LantahSdk.Networks.TESTNET,
             "testanchor.stellar.org",
             "8884404377665521220",
           )),
@@ -102,24 +102,24 @@ describe("Utils", function () {
     });
 
     it("returns challenge which follows SEP0010 spec", function () {
-      let keypair = StellarSdk.Keypair.random();
-      let clientSigningKeypair = StellarSdk.Keypair.random();
+      let keypair = LantahSdk.Keypair.random();
+      let clientSigningKeypair = LantahSdk.Keypair.random();
 
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         keypair,
         "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF",
         "testanchor.stellar.org",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
         null,
         "testdomain",
         clientSigningKeypair.publicKey(),
       );
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(transaction.sequence).to.eql("0");
@@ -154,20 +154,20 @@ describe("Utils", function () {
     });
 
     it("uses the passed-in timeout", function () {
-      let keypair = StellarSdk.Keypair.random();
+      let keypair = LantahSdk.Keypair.random();
 
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         keypair,
         "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF",
         "testanchor.stellar.org",
         600,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       let maxTime = parseInt(transaction.timeBounds.maxTime);
@@ -179,16 +179,16 @@ describe("Utils", function () {
     });
 
     it("throws an error if a muxed account and memo is passed", function () {
-      let keypair = StellarSdk.Keypair.random();
+      let keypair = LantahSdk.Keypair.random();
       const muxedAddress =
         "MCQQMHTBRF2NPCEJWO2JMDT2HBQ2FGDCYREY2YIBSHLTXDG54Y3KTWX3R7NBER62VBELC";
       expect(() =>
-        StellarSdk.Utils.buildChallengeTx(
+        LantahSdk.Utils.buildChallengeTx(
           keypair,
           muxedAddress,
           "testanchor.stellar.org",
           600,
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "testanchor.stellar.org",
           "10154623012567072189",
         ),
@@ -197,12 +197,12 @@ describe("Utils", function () {
 
     it("throws an error if clientSigningKey is not passed", function () {
       expect(() =>
-        StellarSdk.Utils.buildChallengeTx(
-          StellarSdk.Keypair.random(),
-          StellarSdk.Keypair.random().publicKey(),
+        LantahSdk.Utils.buildChallengeTx(
+          LantahSdk.Keypair.random(),
+          LantahSdk.Keypair.random().publicKey(),
           "testanchor.stellar.org",
           600,
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "testanchor.stellar.org",
           null,
           "testdomain",
@@ -214,23 +214,23 @@ describe("Utils", function () {
 
   describe("Utils.readChallengeTx", function () {
     it("requires a envelopeTypeTxV0 or envelopeTypeTx", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
 
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         serverKP,
         clientKP.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
-      const innerTx = new StellarSdk.TransactionBuilder(
-        new StellarSdk.Account(clientKP.publicKey(), "0"),
+      const innerTx = new LantahSdk.TransactionBuilder(
+        new LantahSdk.Account(clientKP.publicKey(), "0"),
         {
           fee: "100",
-          networkPassphrase: StellarSdk.Networks.TESTNET,
+          networkPassphrase: LantahSdk.Networks.TESTNET,
           timebounds: {
             minTime: 0,
             maxTime: 0,
@@ -238,78 +238,78 @@ describe("Utils", function () {
         },
       )
         .addOperation(
-          StellarSdk.Operation.payment({
+          LantahSdk.Operation.payment({
             destination: clientKP.publicKey(),
-            asset: StellarSdk.Asset.native(),
+            asset: LantahSdk.Asset.native(),
             amount: "10.000",
           }),
         )
         .build();
 
-      let feeBump = StellarSdk.TransactionBuilder.buildFeeBumpTransaction(
+      let feeBump = LantahSdk.TransactionBuilder.buildFeeBumpTransaction(
         serverKP,
         "300",
         innerTx,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       ).toXDR();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           feeBump,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /Invalid challenge: expected a Transaction but received a FeeBumpTransaction/,
       );
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
-      ).to.not.throw(StellarSdk.InvalidSep10ChallengeError);
+      ).to.not.throw(LantahSdk.InvalidSep10ChallengeError);
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           feeBump.toXDR().toString("base64"),
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
-      ).to.not.throw(StellarSdk.InvalidSep10ChallengeError);
+      ).to.not.throw(LantahSdk.InvalidSep10ChallengeError);
     });
     it("returns the transaction and the clientAccountID (client's pubKey) if the challenge was created successfully", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
 
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         serverKP,
         clientKP.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
@@ -322,32 +322,32 @@ describe("Utils", function () {
     });
 
     it("returns the clientAccountID and memo if the challenge includes a memo", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
       let clientMemo = "7659725268483412096";
 
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         serverKP,
         clientKP.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
         clientMemo,
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
@@ -360,32 +360,32 @@ describe("Utils", function () {
     });
 
     it("returns the muxed clientAccountID if included in the challenge", function () {
-      let serverKP = StellarSdk.Keypair.random();
+      let serverKP = LantahSdk.Keypair.random();
       let muxedAddress =
         "MCQQMHTBRF2NPCEJWO2JMDT2HBQ2FGDCYREY2YIBSHLTXDG54Y3KTWX3R7NBER62VBELC";
 
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         serverKP,
         muxedAddress,
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         true,
       );
 
       expect(
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
@@ -398,59 +398,59 @@ describe("Utils", function () {
     });
 
     it("throws an error if the transaction uses a muxed account and has a memo", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
       const clientMuxedAddress =
         "MCQQMHTBRF2NPCEJWO2JMDT2HBQ2FGDCYREY2YIBSHLTXDG54Y3KTWX3R7NBER62VBELC";
-      const transaction = new StellarSdk.TransactionBuilder(
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientMuxedAddress,
             name: "testanchor.stellar.org auth",
             value: randomBytes(48).toString("base64"),
             withMuxing: true,
           }),
         )
-        .addMemo(new StellarSdk.Memo.id("5842698851377328257"))
+        .addMemo(new LantahSdk.Memo.id("5842698851377328257"))
         .setTimeout(30)
         .build();
 
       transaction.sign(serverKP);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      const transactionRoundTripped = new StellarSdk.Transaction(
+      const transactionRoundTripped = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "testanchor.stellar.org",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction has a memo but the client account ID is a muxed account/,
       );
     });
 
     it("throws an error if the server hasn't signed the transaction", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
 
-      const transaction = new StellarSdk.TransactionBuilder(
-        new StellarSdk.Account(serverKP.publicKey(), "-1"),
-        { fee: 100, networkPassphrase: StellarSdk.Networks.TESTNET },
+      const transaction = new LantahSdk.TransactionBuilder(
+        new LantahSdk.Account(serverKP.publicKey(), "-1"),
+        { fee: 100, networkPassphrase: LantahSdk.Networks.TESTNET },
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "SDF-test auth",
             value: randomBytes(48).toString("base64"),
@@ -462,24 +462,24 @@ describe("Utils", function () {
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF-test",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         "Transaction not signed by server: '" + serverKP.publicKey() + "'",
       );
     });
 
     it("throws an error if transaction sequenceNumber is different to zero", function () {
-      let keypair = StellarSdk.Keypair.random();
+      let keypair = LantahSdk.Keypair.random();
 
-      const account = new StellarSdk.Account(keypair.publicKey(), "100");
-      const transaction = new StellarSdk.TransactionBuilder(
+      const account = new LantahSdk.Account(keypair.publicKey(), "100");
+      const transaction = new LantahSdk.TransactionBuilder(
         account,
         txBuilderOpts,
       )
@@ -489,51 +489,51 @@ describe("Utils", function () {
       let challenge = transaction.toEnvelope().toXDR("base64").toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           keypair.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction sequence number should be zero/,
       );
     });
 
     it("throws an error if transaction source account is different to server account id", function () {
-      let keypair = StellarSdk.Keypair.random();
+      let keypair = LantahSdk.Keypair.random();
 
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         keypair,
         "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF",
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
-      let serverAccountId = StellarSdk.Keypair.random().publicKey();
+      let serverAccountId = LantahSdk.Keypair.random().publicKey();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverAccountId,
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction source account is not equal to the server's account/,
       );
     });
 
     it("throws an error if transaction doesn't contain any operation", function () {
-      let keypair = StellarSdk.Keypair.random();
-      const account = new StellarSdk.Account(keypair.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let keypair = LantahSdk.Keypair.random();
+      const account = new LantahSdk.Account(keypair.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         account,
         txBuilderOpts,
       )
@@ -544,28 +544,28 @@ describe("Utils", function () {
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           keypair.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction should contain at least one operation/,
       );
     });
 
     it("throws an error if operation does not contain the source account", function () {
-      let keypair = StellarSdk.Keypair.random();
-      const account = new StellarSdk.Account(keypair.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let keypair = LantahSdk.Keypair.random();
+      const account = new LantahSdk.Account(keypair.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         account,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             name: "SDF auth",
             value: randomBytes(48).toString("base64"),
           }),
@@ -577,28 +577,28 @@ describe("Utils", function () {
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           keypair.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction\'s operation should contain a source account/,
       );
     });
 
     it("throws an error if operation is not manage data", function () {
-      let keypair = StellarSdk.Keypair.random();
-      const account = new StellarSdk.Account(keypair.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let keypair = LantahSdk.Keypair.random();
+      const account = new LantahSdk.Account(keypair.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         account,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.accountMerge({
+          LantahSdk.Operation.accountMerge({
             destination: keypair.publicKey(),
             source: keypair.publicKey(),
           }),
@@ -610,33 +610,33 @@ describe("Utils", function () {
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           keypair.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction\'s operation type should be \'manageData\'/,
       );
     });
 
     it("throws an error if transaction.timeBounds.maxTime is infinite", function () {
-      let serverKeypair = StellarSdk.Keypair.random();
-      let clientKeypair = StellarSdk.Keypair.random();
+      let serverKeypair = LantahSdk.Keypair.random();
+      let clientKeypair = LantahSdk.Keypair.random();
 
       const anchorName = "SDF";
-      const networkPassphrase = StellarSdk.Networks.TESTNET;
+      const networkPassphrase = LantahSdk.Networks.TESTNET;
 
-      const account = new StellarSdk.Account(serverKeypair.publicKey(), "-1");
+      const account = new LantahSdk.Account(serverKeypair.publicKey(), "-1");
       const now = Math.floor(Date.now() / 1000);
 
       const value = randomBytes(48).toString("base64");
 
-      let transaction = new StellarSdk.TransactionBuilder(account, {
-        fee: StellarSdk.BASE_FEE,
+      let transaction = new LantahSdk.TransactionBuilder(account, {
+        fee: LantahSdk.BASE_FEE,
         networkPassphrase,
         timebounds: {
           minTime: now,
@@ -644,7 +644,7 @@ describe("Utils", function () {
         },
       })
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             name: `${anchorName} auth`,
             value,
             source: clientKeypair.publicKey(),
@@ -655,9 +655,9 @@ describe("Utils", function () {
       transaction.sign(serverKeypair);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      transaction = new StellarSdk.Transaction(
+      transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(clientKeypair);
 
@@ -667,28 +667,28 @@ describe("Utils", function () {
         .toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           signedChallenge,
           serverKeypair.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           anchorName,
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction requires non-infinite timebounds/,
       );
     });
 
     it("throws an error if operation value is not a 64 bytes base64 string", function () {
-      let keypair = StellarSdk.Keypair.random();
-      const account = new StellarSdk.Account(keypair.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let keypair = LantahSdk.Keypair.random();
+      const account = new LantahSdk.Account(keypair.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         account,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             name: "SDF auth",
             value: randomBytes(64),
             source: "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF",
@@ -701,28 +701,28 @@ describe("Utils", function () {
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           keypair.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction\'s operation value should be a 64 bytes base64 random string/,
       );
     });
 
     it("throws an error if operation value is null", function () {
-      let keypair = StellarSdk.Keypair.random();
-      const account = new StellarSdk.Account(keypair.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let keypair = LantahSdk.Keypair.random();
+      const account = new LantahSdk.Account(keypair.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         account,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             name: "SDF auth",
             value: null,
             source: "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF",
@@ -735,36 +735,36 @@ describe("Utils", function () {
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           keypair.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction\'s operation values should not be null/,
       );
     });
 
     it("throws an error if transaction does not contain valid timeBounds", function () {
-      let keypair = StellarSdk.Keypair.random();
-      let clientKeypair = StellarSdk.Keypair.random();
+      let keypair = LantahSdk.Keypair.random();
+      let clientKeypair = LantahSdk.Keypair.random();
 
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         keypair,
         clientKeypair.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       // Note that this is greater than the grace period of 5 minutes (600 seconds)
       clock.tick(1000 * 1000);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(clientKeypair);
 
@@ -774,15 +774,15 @@ describe("Utils", function () {
         .toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           signedChallenge,
           keypair.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction has expired/,
       );
     });
@@ -796,29 +796,29 @@ describe("Utils", function () {
         "AAAAAgAAAADZJunw2QO9LzjqagEjh/mpWG8Us5nOb+gc6wOex8G+IwAAAGQAAAAAAAAAAAAAAAEAAAAAYPhZ6gAAAXrKHz2UAAAAAAAAAAEAAAABAAAAAJyknd/qYHdzX6iV3TkHlh/usJUr5/U8cRsfVNqaruBAAAAACgAAAB50ZXN0bmV0LXNlcC5zdGFibGV4LmNsb3VkIGF1dGgAAAAAAAEAAABAaEs3QUZieUFCZzBEekx0WnpTVXJkcEhWOXdkdExXUkwxUHFFOW5QRVIrZVlaZzQvdDJlc3drclpBc0ZnTnp5UQAAAAAAAAABx8G+IwAAAEA8I5qQ+/HHXoHrULlg1ODTiCEQ92GQrVBFaB40OKxJhTf1c597AuKLHhJ3c4TNdSp1rjLGbk7qUuhjauxUuH0N";
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           signedChallenge,
           "GDMSN2PQ3EB32LZY5JVACI4H7GUVQ3YUWOM4437IDTVQHHWHYG7CGA5Z",
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "testnet-sep.stablex.cloud",
           "staging-transfer-server.zetl.network",
         ),
       ).not.to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction has expired/,
       );
     });
 
     it("home domain string matches transaction's operation key name", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "testanchor.stellar.org auth",
             value: randomBytes(48).toString("base64"),
@@ -830,16 +830,16 @@ describe("Utils", function () {
       transaction.sign(serverKP);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      const transactionRoundTripped = new StellarSdk.Transaction(
+      const transactionRoundTripped = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "testanchor.stellar.org",
           "testanchor.stellar.org",
         ),
@@ -852,15 +852,15 @@ describe("Utils", function () {
     });
 
     it("home domain in array matches transaction's operation key name", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "testanchor.stellar.org auth",
             value: randomBytes(48).toString("base64"),
@@ -872,16 +872,16 @@ describe("Utils", function () {
       transaction.sign(serverKP);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      const transactionRoundTripped = new StellarSdk.Transaction(
+      const transactionRoundTripped = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           ["SDF", "Test", "testanchor.stellar.org", "SDF-test"],
           "testanchor.stellar.org",
         ),
@@ -894,15 +894,15 @@ describe("Utils", function () {
     });
 
     it("throws an error if home domain is not provided", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "testanchor.stellar.org auth",
             value: randomBytes(48).toString("base64"),
@@ -915,28 +915,28 @@ describe("Utils", function () {
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           // home domain not provided
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /Invalid homeDomains: a home domain must be provided for verification/,
       );
     });
 
     it("throws an error if home domain type is not string or array", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "testanchor.stellar.org auth",
             value: randomBytes(48).toString("base64"),
@@ -949,29 +949,29 @@ describe("Utils", function () {
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           // home domain as number
           1,
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /Invalid homeDomains: homeDomains type is number but should be a string or an array/,
       );
     });
 
     it("throws an error if home domain string does not match transaction's operation key name", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "does.not.match auth",
             value: randomBytes(48).toString("base64"),
@@ -984,29 +984,29 @@ describe("Utils", function () {
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "testanchor.stellar.org",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /Invalid homeDomains: the transaction\'s operation key name does not match the expected home domain/,
       );
     });
 
     it("throws an error if home domain array does not have a match to transaction's operation key name", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "does.not.match auth",
             value: randomBytes(48).toString("base64"),
@@ -1019,36 +1019,36 @@ describe("Utils", function () {
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           ["SDF", "Test", "testanchor.stellar.org", "SDF-test"],
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /Invalid homeDomains: the transaction\'s operation key name does not match the expected home domain/,
       );
     });
 
     it("allows transaction to contain subsequent manage data ops with server account as source account", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "SDF auth",
             value: randomBytes(48).toString("base64"),
           }),
         )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: serverKP.publicKey(),
             name: "a key",
             value: "a value",
@@ -1060,16 +1060,16 @@ describe("Utils", function () {
       transaction.sign(serverKP);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      const transactionRoundTripped = new StellarSdk.Transaction(
+      const transactionRoundTripped = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
@@ -1082,22 +1082,22 @@ describe("Utils", function () {
     });
 
     it("throws an error if the transaction contain subsequent manage data ops without the server account as the source account", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "SDF auth",
             value: randomBytes(48).toString("base64"),
           }),
         )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "a key",
             value: "a value",
@@ -1109,42 +1109,42 @@ describe("Utils", function () {
       transaction.sign(serverKP);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      const transactionRoundTripped = new StellarSdk.Transaction(
+      const transactionRoundTripped = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction has operations that are unrecognized/,
       );
     });
 
     it("throws an error if the transaction contain subsequent ops that are not manage data ops", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "SDF auth",
             value: randomBytes(48).toString("base64"),
           }),
         )
         .addOperation(
-          StellarSdk.Operation.bumpSequence({
+          LantahSdk.Operation.bumpSequence({
             source: clientKP.publicKey(),
             bumpTo: "0",
           }),
@@ -1155,42 +1155,42 @@ describe("Utils", function () {
       transaction.sign(serverKP);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      const transactionRoundTripped = new StellarSdk.Transaction(
+      const transactionRoundTripped = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction has operations that are not of type 'manageData'/,
       );
     });
 
     it("throws an error if the provided webAuthDomain does not match the 'web_auth_domain' operation's value", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "testanchor.stellar.org auth",
             value: randomBytes(48).toString("base64"),
           }),
         )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: serverKP.publicKey(),
             name: "web_auth_domain",
             value: "unexpected_web_auth_domain",
@@ -1202,42 +1202,42 @@ describe("Utils", function () {
       transaction.sign(serverKP);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      const transactionRoundTripped = new StellarSdk.Transaction(
+      const transactionRoundTripped = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "testanchor.stellar.org",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /'web_auth_domain' operation value does not match testanchor.stellar.org/,
       );
     });
 
     it("throws an error if the 'web_auth_domain' operation's source account is not the server's public key", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "testanchor.stellar.org auth",
             value: randomBytes(48).toString("base64"),
           }),
         )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "web_auth_domain",
             value: "testanchor.stellar.org",
@@ -1249,35 +1249,35 @@ describe("Utils", function () {
       transaction.sign(serverKP);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      const transactionRoundTripped = new StellarSdk.Transaction(
+      const transactionRoundTripped = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(() =>
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "testanchor.stellar.org",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /The transaction has operations that are unrecognized/,
       );
     });
 
     it("allows transaction to omit the 'web_auth_domain' operation", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "testanchor.stellar.org auth",
             value: randomBytes(48).toString("base64"),
@@ -1289,16 +1289,16 @@ describe("Utils", function () {
       transaction.sign(serverKP);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      const transactionRoundTripped = new StellarSdk.Transaction(
+      const transactionRoundTripped = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "testanchor.stellar.org",
           "testanchor.stellar.org",
         ),
@@ -1311,22 +1311,22 @@ describe("Utils", function () {
     });
 
     it("matches the 'web_auth_domain' operation value with webAuthDomain", function () {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "testanchor.stellar.org auth",
             value: randomBytes(48).toString("base64"),
           }),
         )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: serverKP.publicKey(),
             name: "web_auth_domain",
             value: "auth.stellar.org",
@@ -1338,16 +1338,16 @@ describe("Utils", function () {
       transaction.sign(serverKP);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      const transactionRoundTripped = new StellarSdk.Transaction(
+      const transactionRoundTripped = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "testanchor.stellar.org",
           "auth.stellar.org",
         ),
@@ -1360,22 +1360,22 @@ describe("Utils", function () {
     });
 
     it("allows subsequent manageData operations to have undefined values", () => {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      const transaction = new StellarSdk.TransactionBuilder(
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "testanchor.stellar.org auth",
             value: randomBytes(48).toString("base64"),
           }),
         )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: serverKP.publicKey(),
             name: "nonWebAuthDomainKey",
             value: null,
@@ -1387,16 +1387,16 @@ describe("Utils", function () {
       transaction.sign(serverKP);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      const transactionRoundTripped = new StellarSdk.Transaction(
+      const transactionRoundTripped = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       expect(
-        StellarSdk.Utils.readChallengeTx(
+        LantahSdk.Utils.readChallengeTx(
           challenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           "testanchor.stellar.org",
           "auth.stellar.org",
         ),
@@ -1409,24 +1409,24 @@ describe("Utils", function () {
     });
 
     it("validates a challenge containing a 'client_domain' manageData operation", () => {
-      let serverKP = StellarSdk.Keypair.random();
-      let clientKP = StellarSdk.Keypair.random();
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
-      let clientSigningKeypair = StellarSdk.Keypair.random();
+      let serverKP = LantahSdk.Keypair.random();
+      let clientKP = LantahSdk.Keypair.random();
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
+      let clientSigningKeypair = LantahSdk.Keypair.random();
 
-      const transaction = new StellarSdk.TransactionBuilder(
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "testanchor.stellar.org auth",
             value: randomBytes(48).toString("base64"),
           }),
         )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientSigningKeypair.publicKey(),
             name: "client_domain",
             value: "testdomain",
@@ -1438,10 +1438,10 @@ describe("Utils", function () {
       transaction.sign(serverKP);
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
-      StellarSdk.Utils.readChallengeTx(
+      LantahSdk.Utils.readChallengeTx(
         challenge,
         serverKP.publicKey(),
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
         "testanchor.stellar.org",
       );
@@ -1450,15 +1450,15 @@ describe("Utils", function () {
 
   describe("Utils.verifyChallengeTxThreshold", function () {
     beforeEach(function () {
-      this.serverKP = StellarSdk.Keypair.random();
-      this.clientKP1 = StellarSdk.Keypair.random();
-      this.clientKP2 = StellarSdk.Keypair.random();
-      this.clientKP3 = StellarSdk.Keypair.random();
+      this.serverKP = LantahSdk.Keypair.random();
+      this.clientKP1 = LantahSdk.Keypair.random();
+      this.clientKP2 = LantahSdk.Keypair.random();
+      this.clientKP3 = LantahSdk.Keypair.random();
 
-      this.txAccount = new StellarSdk.Account(this.serverKP.publicKey(), "-1");
-      this.opAccount = new StellarSdk.Account(this.clientKP1.publicKey(), "0");
+      this.txAccount = new LantahSdk.Account(this.serverKP.publicKey(), "-1");
+      this.opAccount = new LantahSdk.Account(this.clientKP1.publicKey(), "0");
 
-      this.operation = StellarSdk.Operation.manageData({
+      this.operation = LantahSdk.Operation.manageData({
         source: this.clientKP1.publicKey(),
         name: "SDF-test auth",
         value: randomBytes(48).toString("base64"),
@@ -1466,7 +1466,7 @@ describe("Utils", function () {
 
       this.txBuilderOpts = {
         fee: 100,
-        networkPassphrase: StellarSdk.Networks.TESTNET,
+        networkPassphrase: LantahSdk.Networks.TESTNET,
       };
     });
 
@@ -1480,7 +1480,7 @@ describe("Utils", function () {
     });
 
     it("throws an error if the server hasn't signed the transaction", function () {
-      const transaction = new StellarSdk.TransactionBuilder(
+      const transaction = new LantahSdk.TransactionBuilder(
         this.txAccount,
         this.txBuilderOpts,
       )
@@ -1496,36 +1496,36 @@ describe("Utils", function () {
       const challenge = transaction.toEnvelope().toXDR("base64").toString();
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxThreshold(
+        LantahSdk.Utils.verifyChallengeTxThreshold(
           challenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           threshold,
           signerSummary,
           "SDF-test",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         "Transaction not signed by server: '" + this.serverKP.publicKey() + "'",
       );
     });
 
     it("successfully validates server and client key meeting threshold", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP1);
       const signedChallenge = transaction
@@ -1537,10 +1537,10 @@ describe("Utils", function () {
       const signerSummary = [newClientSigner(this.clientKP1.publicKey(), 1)];
 
       expect(
-        StellarSdk.Utils.verifyChallengeTxThreshold(
+        LantahSdk.Utils.verifyChallengeTxThreshold(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           threshold,
           signerSummary,
           "SDF",
@@ -1550,20 +1550,20 @@ describe("Utils", function () {
     });
 
     it("successfully validates server and multiple client keys, meeting threshold", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP1, this.clientKP2);
       const signedChallenge = transaction
@@ -1578,10 +1578,10 @@ describe("Utils", function () {
       ];
 
       expect(
-        StellarSdk.Utils.verifyChallengeTxThreshold(
+        LantahSdk.Utils.verifyChallengeTxThreshold(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           threshold,
           signerSummary,
           "SDF",
@@ -1591,20 +1591,20 @@ describe("Utils", function () {
     });
 
     it("successfully validates server and multiple client keys, meeting threshold with more keys than needed", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP1, this.clientKP2);
       const signedChallenge = transaction
@@ -1620,10 +1620,10 @@ describe("Utils", function () {
       ];
 
       expect(
-        StellarSdk.Utils.verifyChallengeTxThreshold(
+        LantahSdk.Utils.verifyChallengeTxThreshold(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           threshold,
           signerSummary,
           "SDF",
@@ -1639,20 +1639,20 @@ describe("Utils", function () {
       const unknownSignerType =
         "?ARPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD";
 
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP1, this.clientKP2);
       const signedChallenge = transaction
@@ -1671,10 +1671,10 @@ describe("Utils", function () {
       ];
 
       expect(
-        StellarSdk.Utils.verifyChallengeTxThreshold(
+        LantahSdk.Utils.verifyChallengeTxThreshold(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           threshold,
           signerSummary,
           "SDF",
@@ -1684,20 +1684,20 @@ describe("Utils", function () {
     });
 
     it("throws an error if multiple client keys were not enough to meet the threshold", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP1, this.clientKP2);
       const signedChallenge = transaction
@@ -1713,36 +1713,36 @@ describe("Utils", function () {
       ];
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxThreshold(
+        LantahSdk.Utils.verifyChallengeTxThreshold(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           threshold,
           signerSummary,
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         `signers with weight 3 do not meet threshold ${threshold}"`,
       );
     });
 
     it("throws an error if an unrecognized (not from the signerSummary) key has signed the transaction", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP1, this.clientKP2, this.clientKP3);
       const signedChallenge = transaction
@@ -1757,36 +1757,36 @@ describe("Utils", function () {
       ];
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxThreshold(
+        LantahSdk.Utils.verifyChallengeTxThreshold(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           threshold,
           signerSummary,
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /Transaction has unrecognized signatures/,
       );
     });
 
     it("throws an error if the signerSummary is empty", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP1, this.clientKP2, this.clientKP3);
       const signedChallenge = transaction
@@ -1797,17 +1797,17 @@ describe("Utils", function () {
       const threshold = 10;
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxThreshold(
+        LantahSdk.Utils.verifyChallengeTxThreshold(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           threshold,
           [],
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /No verifiable client signers provided, at least one G... address must be provided/,
       );
     });
@@ -1815,14 +1815,14 @@ describe("Utils", function () {
 
   describe("Utils.verifyChallengeTxSigners", function () {
     beforeEach(function () {
-      this.serverKP = StellarSdk.Keypair.random();
-      this.clientKP1 = StellarSdk.Keypair.random();
-      this.clientKP2 = StellarSdk.Keypair.random();
+      this.serverKP = LantahSdk.Keypair.random();
+      this.clientKP1 = LantahSdk.Keypair.random();
+      this.clientKP2 = LantahSdk.Keypair.random();
 
-      this.txAccount = new StellarSdk.Account(this.serverKP.publicKey(), "-1");
-      this.opAccount = new StellarSdk.Account(this.clientKP1.publicKey(), "0");
+      this.txAccount = new LantahSdk.Account(this.serverKP.publicKey(), "-1");
+      this.opAccount = new LantahSdk.Account(this.clientKP1.publicKey(), "0");
 
-      this.operation = StellarSdk.Operation.manageData({
+      this.operation = LantahSdk.Operation.manageData({
         source: this.clientKP1.publicKey(),
         name: "SDF-test auth",
         value: randomBytes(48).toString("base64"),
@@ -1830,7 +1830,7 @@ describe("Utils", function () {
 
       this.txBuilderOpts = {
         fee: 100,
-        networkPassphrase: StellarSdk.Networks.TESTNET,
+        networkPassphrase: LantahSdk.Networks.TESTNET,
       };
     });
 
@@ -1844,20 +1844,20 @@ describe("Utils", function () {
     });
 
     it("successfully validates server and client master key signatures in the transaction", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP1);
 
@@ -1867,10 +1867,10 @@ describe("Utils", function () {
         .toString();
 
       expect(
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [this.clientKP1.publicKey()],
           "SDF",
           "testanchor.stellar.org",
@@ -1879,7 +1879,7 @@ describe("Utils", function () {
     });
 
     it("throws an error if the server hasn't signed the transaction", function () {
-      const transaction = new StellarSdk.TransactionBuilder(
+      const transaction = new LantahSdk.TransactionBuilder(
         this.txAccount,
         this.txBuilderOpts,
       )
@@ -1887,7 +1887,7 @@ describe("Utils", function () {
         .setTimeout(30)
         .build();
 
-      transaction.sign(StellarSdk.Keypair.random()); // Signing with another key pair instead of the server's
+      transaction.sign(LantahSdk.Keypair.random()); // Signing with another key pair instead of the server's
 
       const invalidsServerSignedChallenge = transaction
         .toEnvelope()
@@ -1895,66 +1895,66 @@ describe("Utils", function () {
         .toString();
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           invalidsServerSignedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [this.clientKP1.publicKey()],
           "SDF-test",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         "Transaction not signed by server: '" + this.serverKP.publicKey() + "'",
       );
     });
 
     it("throws an error if the list of signers is empty", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           challenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [],
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /No verifiable client signers provided, at least one G... address must be provided/,
       );
     });
 
     it("throws an error if none of the given signers have signed the transaction", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(
-        StellarSdk.Keypair.random(),
-        StellarSdk.Keypair.random(),
+        LantahSdk.Keypair.random(),
+        LantahSdk.Keypair.random(),
       );
       const signedChallenge = transaction
         .toEnvelope()
@@ -1962,35 +1962,35 @@ describe("Utils", function () {
         .toString();
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [this.clientKP1.publicKey()],
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /None of the given signers match the transaction signatures/,
       );
     });
 
     it("successfully validates server and multiple client signers in the transaction", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       const clientSigners = [this.clientKP1, this.clientKP2];
       transaction.sign(...clientSigners);
@@ -2002,10 +2002,10 @@ describe("Utils", function () {
         .toString();
 
       expect(
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           clientSignersPubKey,
           "SDF",
           "testanchor.stellar.org",
@@ -2014,20 +2014,20 @@ describe("Utils", function () {
     });
 
     it("successfully validates server and multiple client signers, in reverse order", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       const clientSigners = [this.clientKP1, this.clientKP2];
       transaction.sign(...clientSigners.reverse());
@@ -2039,10 +2039,10 @@ describe("Utils", function () {
         .toString();
 
       expect(
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           clientSignersPubKey,
           "SDF",
           "testanchor.stellar.org",
@@ -2051,20 +2051,20 @@ describe("Utils", function () {
     });
 
     it("successfully validates server and non-masterkey client signer", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP2);
 
@@ -2074,10 +2074,10 @@ describe("Utils", function () {
         .toString();
 
       expect(
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [this.clientKP2.publicKey()],
           "SDF",
           "testanchor.stellar.org",
@@ -2086,20 +2086,20 @@ describe("Utils", function () {
     });
 
     it("successfully validates server and non-master key client signer, ignoring extra signer", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP2);
 
@@ -2109,11 +2109,11 @@ describe("Utils", function () {
         .toString();
 
       expect(
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
-          [this.clientKP2.publicKey(), StellarSdk.Keypair.random().publicKey()],
+          LantahSdk.Networks.TESTNET,
+          [this.clientKP2.publicKey(), LantahSdk.Keypair.random().publicKey()],
           "SDF",
           "testanchor.stellar.org",
         ),
@@ -2121,20 +2121,20 @@ describe("Utils", function () {
     });
 
     it("throws an error if no client but instead the server has signed the transaction", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.serverKP);
 
@@ -2144,35 +2144,35 @@ describe("Utils", function () {
         .toString();
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [this.clientKP2.publicKey(), this.serverKP.publicKey()],
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /None of the given signers match the transaction signatures/,
       );
     });
 
     it("successfully validates server and non-masterkey client signer, ignoring duplicated client signers", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP2);
 
@@ -2182,10 +2182,10 @@ describe("Utils", function () {
         .toString();
 
       expect(
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [this.clientKP2.publicKey(), this.clientKP2.publicKey()],
           "SDF",
           "testanchor.stellar.org",
@@ -2200,20 +2200,20 @@ describe("Utils", function () {
       const unknownSignerType =
         "?ARPF6NZRR7EEVO7ESIWUDXHAOMM2QSKIQQBJK6I2FB7YKDZES5UCLWD";
 
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP2);
 
@@ -2223,10 +2223,10 @@ describe("Utils", function () {
         .toString();
 
       expect(
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [this.clientKP2.publicKey(), preauthTxHash, xHash, unknownSignerType],
           "SDF",
           "testanchor.stellar.org",
@@ -2235,20 +2235,20 @@ describe("Utils", function () {
     });
 
     it("throws an error if duplicated signers have been provided and they haven't actually signed the transaction", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP1);
       const signedChallenge = transaction
@@ -2257,35 +2257,35 @@ describe("Utils", function () {
         .toString();
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [this.clientKP2.publicKey(), this.clientKP2.publicKey()],
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /None of the given signers match the transaction signatures/,
       );
     });
 
     it("throws an error if the same KP has signed the transaction more than once", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP2, this.clientKP2);
 
@@ -2295,35 +2295,35 @@ describe("Utils", function () {
         .toString();
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [this.clientKP2.publicKey()],
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /Transaction has unrecognized signatures/,
       );
     });
 
     it("throws an error if the client attempts to verify the transaction with a Seed instead of the Public Key", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP2, this.clientKP2);
 
@@ -2333,22 +2333,22 @@ describe("Utils", function () {
         .toString();
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [this.clientKP2.secret()],
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /No verifiable client signers provided, at least one G... address must be provided/,
       );
     });
 
     it("throws an error if no client has signed the transaction", function () {
-      const transaction = new StellarSdk.TransactionBuilder(
+      const transaction = new LantahSdk.TransactionBuilder(
         this.txAccount,
         this.txBuilderOpts,
       )
@@ -2365,35 +2365,35 @@ describe("Utils", function () {
       ];
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           challenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           clientSigners,
           "SDF-test",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /None of the given signers match the transaction signatures/,
       );
     });
 
     it("throws an error if no public keys were provided to verify signatires", function () {
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         this.serverKP,
         this.clientKP1.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
       );
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
       transaction.sign(this.clientKP1);
 
@@ -2403,30 +2403,30 @@ describe("Utils", function () {
         .toString();
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           this.serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [],
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /No verifiable client signers provided, at least one G... address must be provided/,
       );
     });
 
     it("validates challenges containing client domain signers", () => {
-      const serverKP = StellarSdk.Keypair.random();
-      const clientKP = StellarSdk.Keypair.random();
-      const clientSigningKey = StellarSdk.Keypair.random();
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const serverKP = LantahSdk.Keypair.random();
+      const clientKP = LantahSdk.Keypair.random();
+      const clientSigningKey = LantahSdk.Keypair.random();
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         serverKP,
         clientKP.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
         null,
         "testdomain",
@@ -2435,9 +2435,9 @@ describe("Utils", function () {
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       transaction.sign(clientKP);
@@ -2448,10 +2448,10 @@ describe("Utils", function () {
         .toXDR("base64")
         .toString();
 
-      const signersFound = StellarSdk.Utils.verifyChallengeTxSigners(
+      const signersFound = LantahSdk.Utils.verifyChallengeTxSigners(
         signedChallenge,
         serverKP.publicKey(),
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         [clientKP.publicKey()],
         "SDF",
         "testanchor.stellar.org",
@@ -2461,15 +2461,15 @@ describe("Utils", function () {
     });
 
     it("throws an error if a challenge with a client_domain operation doesn't have a matching signature", () => {
-      const serverKP = StellarSdk.Keypair.random();
-      const clientKP = StellarSdk.Keypair.random();
-      const clientSigningKeypair = StellarSdk.Keypair.random();
-      const challenge = StellarSdk.Utils.buildChallengeTx(
+      const serverKP = LantahSdk.Keypair.random();
+      const clientKP = LantahSdk.Keypair.random();
+      const clientSigningKeypair = LantahSdk.Keypair.random();
+      const challenge = LantahSdk.Utils.buildChallengeTx(
         serverKP,
         clientKP.publicKey(),
         "SDF",
         300,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
         "testanchor.stellar.org",
         null,
         "testdomain",
@@ -2478,9 +2478,9 @@ describe("Utils", function () {
 
       clock.tick(200);
 
-      const transaction = new StellarSdk.Transaction(
+      const transaction = new LantahSdk.Transaction(
         challenge,
-        StellarSdk.Networks.TESTNET,
+        LantahSdk.Networks.TESTNET,
       );
 
       transaction.sign(clientKP);
@@ -2491,47 +2491,47 @@ describe("Utils", function () {
         .toString();
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [clientKP.publicKey()],
           "SDF",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /Transaction not signed by the source account of the 'client_domain' ManageData operation/,
       );
     });
 
     it("throws an error if a challenge has multiple client_domain operations", () => {
-      const serverKP = StellarSdk.Keypair.random();
-      const clientKP = StellarSdk.Keypair.random();
-      const clientSigningKeypair = StellarSdk.Keypair.random();
+      const serverKP = LantahSdk.Keypair.random();
+      const clientKP = LantahSdk.Keypair.random();
+      const clientSigningKeypair = LantahSdk.Keypair.random();
 
-      const serverAccount = new StellarSdk.Account(serverKP.publicKey(), "-1");
+      const serverAccount = new LantahSdk.Account(serverKP.publicKey(), "-1");
 
-      const transaction = new StellarSdk.TransactionBuilder(
+      const transaction = new LantahSdk.TransactionBuilder(
         serverAccount,
         txBuilderOpts,
       )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientKP.publicKey(),
             name: "testanchor.stellar.org auth",
             value: randomBytes(48).toString("base64"),
           }),
         )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientSigningKeypair.publicKey(),
             name: "client_domain",
             value: "testdomain",
           }),
         )
         .addOperation(
-          StellarSdk.Operation.manageData({
+          LantahSdk.Operation.manageData({
             source: clientSigningKeypair.publicKey(),
             name: "client_domain",
             value: "testdomain2",
@@ -2552,16 +2552,16 @@ describe("Utils", function () {
         .toString();
 
       expect(() =>
-        StellarSdk.Utils.verifyChallengeTxSigners(
+        LantahSdk.Utils.verifyChallengeTxSigners(
           signedChallenge,
           serverKP.publicKey(),
-          StellarSdk.Networks.TESTNET,
+          LantahSdk.Networks.TESTNET,
           [clientKP.publicKey()],
           "testanchor.stellar.org",
           "testanchor.stellar.org",
         ),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /Found more than one client_domain operation/,
       );
     });
@@ -2569,9 +2569,9 @@ describe("Utils", function () {
 
   describe("Utils.verifyTxSignedBy", function () {
     beforeEach(function () {
-      this.keypair = StellarSdk.Keypair.random();
-      this.account = new StellarSdk.Account(this.keypair.publicKey(), "-1");
-      this.transaction = new StellarSdk.TransactionBuilder(
+      this.keypair = LantahSdk.Keypair.random();
+      this.account = new LantahSdk.Account(this.keypair.publicKey(), "-1");
+      this.transaction = new LantahSdk.TransactionBuilder(
         this.account,
         txBuilderOpts,
       )
@@ -2587,7 +2587,7 @@ describe("Utils", function () {
       this.transaction.sign(this.keypair);
 
       expect(
-        StellarSdk.Utils.verifyTxSignedBy(
+        LantahSdk.Utils.verifyTxSignedBy(
           this.transaction,
           this.keypair.publicKey(),
         ),
@@ -2597,10 +2597,10 @@ describe("Utils", function () {
     it("returns false if the transaction was not signed by the given account", function () {
       this.transaction.sign(this.keypair);
 
-      let differentKeypair = StellarSdk.Keypair.random();
+      let differentKeypair = LantahSdk.Keypair.random();
 
       expect(
-        StellarSdk.Utils.verifyTxSignedBy(
+        LantahSdk.Utils.verifyTxSignedBy(
           this.transaction,
           differentKeypair.publicKey(),
         ),
@@ -2609,7 +2609,7 @@ describe("Utils", function () {
 
     it("works with an unsigned transaction", function () {
       expect(
-        StellarSdk.Utils.verifyTxSignedBy(
+        LantahSdk.Utils.verifyTxSignedBy(
           this.transaction,
           this.keypair.publicKey(),
         ),
@@ -2619,10 +2619,10 @@ describe("Utils", function () {
 
   describe("Utils.gatherTxSigners", function () {
     beforeEach(function () {
-      this.keypair1 = StellarSdk.Keypair.random();
-      this.keypair2 = StellarSdk.Keypair.random();
-      this.account = new StellarSdk.Account(this.keypair1.publicKey(), "-1");
-      this.transaction = new StellarSdk.TransactionBuilder(
+      this.keypair1 = LantahSdk.Keypair.random();
+      this.keypair2 = LantahSdk.Keypair.random();
+      this.account = new LantahSdk.Account(this.keypair1.publicKey(), "-1");
+      this.transaction = new LantahSdk.TransactionBuilder(
         this.account,
         txBuilderOpts,
       )
@@ -2642,7 +2642,7 @@ describe("Utils", function () {
         this.keypair2.publicKey(),
       ];
       expect(
-        StellarSdk.Utils.gatherTxSigners(this.transaction, expectedSignatures),
+        LantahSdk.Utils.gatherTxSigners(this.transaction, expectedSignatures),
       ).to.eql(expectedSignatures);
     });
 
@@ -2661,7 +2661,7 @@ describe("Utils", function () {
         this.keypair2.publicKey(),
       ];
       expect(
-        StellarSdk.Utils.gatherTxSigners(this.transaction, [
+        LantahSdk.Utils.gatherTxSigners(this.transaction, [
           this.keypair1.publicKey(),
           this.keypair2.publicKey(),
         ]),
@@ -2672,19 +2672,19 @@ describe("Utils", function () {
       this.transaction.sign(this.keypair1, this.keypair2);
 
       let wrongSignatures = [
-        StellarSdk.Keypair.random().publicKey(),
-        StellarSdk.Keypair.random().publicKey(),
-        StellarSdk.Keypair.random().publicKey(),
+        LantahSdk.Keypair.random().publicKey(),
+        LantahSdk.Keypair.random().publicKey(),
+        LantahSdk.Keypair.random().publicKey(),
       ];
 
       expect(
-        StellarSdk.Utils.gatherTxSigners(this.transaction, wrongSignatures),
+        LantahSdk.Utils.gatherTxSigners(this.transaction, wrongSignatures),
       ).to.eql([]);
     });
 
     it("calling gatherTxSigners with an unsigned transaction will return an empty list", function () {
       expect(
-        StellarSdk.Utils.gatherTxSigners(this.transaction, [
+        LantahSdk.Utils.gatherTxSigners(this.transaction, [
           this.keypair1.publicKey(),
           this.keypair2.publicKey(),
         ]),
@@ -2696,12 +2696,12 @@ describe("Utils", function () {
       const preauthTxHash =
         "TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4";
       expect(() =>
-        StellarSdk.Utils.gatherTxSigners(this.transaction, [
+        LantahSdk.Utils.gatherTxSigners(this.transaction, [
           preauthTxHash,
           this.keypair1.publicKey(),
         ]),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /Signer is not a valid address/,
       );
     });
@@ -2711,12 +2711,12 @@ describe("Utils", function () {
       const invalidGHash =
         "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CAAA";
       expect(() =>
-        StellarSdk.Utils.gatherTxSigners(this.transaction, [
+        LantahSdk.Utils.gatherTxSigners(this.transaction, [
           invalidGHash,
           this.keypair1.publicKey(),
         ]),
       ).to.throw(
-        StellarSdk.InvalidSep10ChallengeError,
+        LantahSdk.InvalidSep10ChallengeError,
         /Signer is not a valid address/,
       );
     });

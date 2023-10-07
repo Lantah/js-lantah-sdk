@@ -1,9 +1,9 @@
-import { Asset } from "stellar-base";
+import { Asset } from "lantah-base";
 import { CallBuilder } from "./call_builder";
 import { ServerApi } from "./server_api";
 
 /**
- * The Stellar Network allows payments to be made across assets through path payments. A path payment specifies a
+ * The Lantah Network allows payments to be made across assets through path payments. A path payment specifies a
  * series of assets to route a payment through, from source asset (the asset debited from the payer) to destination
  * asset (the asset credited to the payee).
  *
@@ -13,14 +13,14 @@ import { ServerApi } from "./server_api";
  * * The source address
  * * The asset and amount that the destination account should receive
  *
- * As part of the search, horizon will load a list of assets available to the source address and will find any
+ * As part of the search, orbitr will load a list of assets available to the source address and will find any
  * payment paths from those source assets to the desired destination asset. The search's amount parameter will be
  * used to determine if there a given path can satisfy a payment of the desired amount.
  *
  * Do not create this object directly, use {@link Server#paths}.
  * @see [Find Payment Paths](https://developers.stellar.org/api/aggregations/paths/)
  * @extends CallBuilder
- * @param {string} serverUrl Horizon server URL.
+ * @param {string} serverUrl Orbitr server URL.
  * @param {string} source The sender's account ID. Any returned path must use a source that the sender can hold.
  * @param {string} destination The destination account ID that any returned path should use.
  * @param {Asset} destinationAsset The destination asset.

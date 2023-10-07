@@ -9,7 +9,7 @@ import { ServerApi } from "./server_api";
  * @constructor
  * @class LedgerCallBuilder
  * @extends CallBuilder
- * @param {string} serverUrl Horizon server URL.
+ * @param {string} serverUrl Orbitr server URL.
  */
 export class LedgerCallBuilder extends CallBuilder<
   ServerApi.CollectionPage<ServerApi.LedgerRecord>

@@ -9,7 +9,7 @@ import { ServerApi } from "./server_api";
  * @extends CallBuilder
  * @see [All Effects](https://developers.stellar.org/api/resources/effects/)
  * @constructor
- * @param {string} serverUrl Horizon server URL.
+ * @param {string} serverUrl Orbitr server URL.
  */
 export class EffectCallBuilder extends CallBuilder<
   ServerApi.CollectionPage<ServerApi.EffectRecord>

@@ -8,7 +8,7 @@ import { ServerApi } from "./server_api";
  * @class AssetsCallBuilder
  * @constructor
  * @extends CallBuilder
- * @param {string} serverUrl Horizon server URL.
+ * @param {string} serverUrl Orbitr server URL.
  */
 export class AssetsCallBuilder extends CallBuilder<
   ServerApi.CollectionPage<ServerApi.AssetRecord>

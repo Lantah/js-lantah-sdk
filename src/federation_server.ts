@@ -1,10 +1,10 @@
 import axios from "axios";
-import { StrKey } from "stellar-base";
+import { StrKey } from "lantah-base";
 import URI from "urijs";
 
 import { Config } from "./config";
 import { BadResponseError } from "./errors";
-import { StellarTomlResolver } from "./stellar_toml_resolver";
+import { LantahTomlResolver } from "./stellar_toml_resolver";
 
 // FEDERATION_RESPONSE_MAX_SIZE is the maximum size of response from a federation server
 export const FEDERATION_RESPONSE_MAX_SIZE = 100 * 1024;
@@ -48,7 +48,7 @@ export class FederationServer {
    * It accepts two types of values:
    *
    * * For Stellar address (ex. `bob*stellar.org`) it splits Stellar address and then tries to find information about
-   * federation server in `stellar.toml` file for a given domain. It returns a `Promise` which resolves if federation
+   * federation server in `lantah.toml` file for a given domain. It returns a `Promise` which resolves if federation
    * server exists and user has been found and rejects in all other cases.
    * * For Account ID (ex. `GB5XVAABEQMY63WTHDQ5RXADGYF345VWMNPTN2GFUDZT57D57ZQTJ7PS`) it returns a `Promise` which
    * resolves if Account ID is valid and rejects in all other cases. Please note that this method does not check
@@ -56,7 +56,7 @@ export class FederationServer {
    *
    * Example:
    * ```js
-   * StellarSdk.FederationServer.resolve('bob*stellar.org')
+   * LantahSdk.FederationServer.resolve('alice*lantah.org')
    *  .then(federationRecord => {
    *    // {
    *    //   account_id: 'GB5XVAABEQMY63WTHDQ5RXADGYF345VWMNPTN2GFUDZT57D57ZQTJ7PS',
@@ -67,7 +67,7 @@ export class FederationServer {
    * ```
    *
    * @see <a href="https://developers.stellar.org/docs/glossary/federation/" target="_blank">Federation doc</a>
-   * @see <a href="https://developers.stellar.org/docs/issuing-assets/publishing-asset-info/" target="_blank">Stellar.toml doc</a>
+   * @see <a href="https://developers.stellar.org/docs/issuing-assets/publishing-asset-info/" target="_blank">Lantah.Toml doc</a>
    * @param {string} value Stellar Address (ex. `bob*stellar.org`)
    * @param {object} [opts] Options object
    * @param {boolean} [opts.allowHttp] - Allow connecting to http servers, default: `false`. This must be set to false in production deployments!
@@ -104,21 +104,21 @@ export class FederationServer {
 
   /**
    * Creates a `FederationServer` instance based on information from
-   * [stellar.toml](https://developers.stellar.org/docs/issuing-assets/publishing-asset-info/)
+   * [lantah.toml](https://developers.stellar.org/docs/issuing-assets/publishing-asset-info/)
    * file for a given domain.
    *
-   * If `stellar.toml` file does not exist for a given domain or it does not
+   * If `lantah.toml` file does not exist for a given domain or it does not
    * contain information about a federation server Promise will reject.
    * ```js
-   * StellarSdk.FederationServer.createForDomain('acme.com')
+   * LantahSdk.FederationServer.createForDomain('acme.com')
    *   .then(federationServer => {
    *     // federationServer.resolveAddress('bob').then(...)
    *   })
    *   .catch(error => {
-   *     // stellar.toml does not exist or it does not contain information about federation server.
+   *     // lantah.toml does not exist or it does not contain information about federation server.
    *   });
    * ```
-   * @see <a href="https://developers.stellar.org/docs/issuing-assets/publishing-asset-info/" target="_blank">Stellar.toml doc</a>
+   * @see <a href="https://developers.stellar.org/docs/issuing-assets/publishing-asset-info/" target="_blank">Lantah.Toml doc</a>
    * @param {string} domain Domain to get federation server for
    * @param {object} [opts] Options object
    * @param {boolean} [opts.allowHttp] - Allow connecting to http servers, default: `false`. This must be set to false in production deployments!
@@ -129,10 +129,10 @@ export class FederationServer {
     domain: string,
     opts: FederationServer.Options = {},
   ): Promise<FederationServer> {
-    const tomlObject = await StellarTomlResolver.resolve(domain, opts);
+    const tomlObject = await LantahTomlResolver.resolve(domain, opts);
     if (!tomlObject.FEDERATION_SERVER) {
       return Promise.reject(
-        new Error("stellar.toml does not contain FEDERATION_SERVER field"),
+        new Error("lantah.toml does not contain FEDERATION_SERVER field"),
       );
     }
     return new FederationServer(tomlObject.FEDERATION_SERVER, domain, opts);

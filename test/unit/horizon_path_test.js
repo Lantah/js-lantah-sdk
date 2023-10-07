@@ -1,7 +1,7 @@
-describe("horizon path tests", function () {
+describe("orbitr path tests", function () {
   beforeEach(function () {
-    this.axiosMock = sinon.mock(HorizonAxiosClient);
-    StellarSdk.Config.setDefault();
+    this.axiosMock = sinon.mock(OrbitrAxiosClient);
+    LantahSdk.Config.setDefault();
   });
 
   afterEach(function () {
@@ -9,8 +9,8 @@ describe("horizon path tests", function () {
     this.axiosMock.restore();
   });
 
-  function test_horizon_paths(serverUrl) {
-    let server = new StellarSdk.Server(serverUrl);
+  function test_orbitr_paths(serverUrl) {
+    let server = new LantahSdk.Server(serverUrl);
 
     let randomResult = {
       data: {
@@ -111,24 +111,24 @@ describe("horizon path tests", function () {
     it("server.submitTransaction() " + serverUrl, function (done) {
       randomResult.endpoint = "post";
 
-      let keypair = StellarSdk.Keypair.random();
-      let account = new StellarSdk.Account(
+      let keypair = LantahSdk.Keypair.random();
+      let account = new LantahSdk.Account(
         keypair.publicKey(),
         "56199647068161",
       );
 
-      let fakeTransaction = new StellarSdk.TransactionBuilder(account, {
+      let fakeTransaction = new LantahSdk.TransactionBuilder(account, {
         fee: 100,
-        networkPassphrase: StellarSdk.Networks.TESTNET,
+        networkPassphrase: LantahSdk.Networks.TESTNET,
       })
         .addOperation(
-          StellarSdk.Operation.payment({
+          LantahSdk.Operation.payment({
             destination: keypair.publicKey(),
-            asset: StellarSdk.Asset.native(),
+            asset: LantahSdk.Asset.native(),
             amount: "100.50",
           }),
         )
-        .setTimeout(StellarSdk.TimeoutInfinite)
+        .setTimeout(LantahSdk.TimeoutInfinite)
         .build();
       fakeTransaction.sign(keypair);
       let tx = encodeURIComponent(
@@ -160,6 +160,6 @@ describe("horizon path tests", function () {
 
   for (var index = 0; index < serverUrls.length; index++) {
     var serverUrl = serverUrls[index];
-    test_horizon_paths(serverUrl);
+    test_orbitr_paths(serverUrl);
   }
 });

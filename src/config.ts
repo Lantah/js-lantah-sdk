@@ -25,15 +25,15 @@ let config = Object.assign({}, defaultConfig);
  *
  * Usage node:
  * ```
- * import {Config} from 'stellar-sdk';
+ * import {Config} from 'lantah-sdk';
  * Config.setAllowHttp(true);
  * Config.setTimeout(5000);
  * ```
  *
  * Usage browser:
  * ```
- * StellarSdk.Config.setAllowHttp(true);
- * StellarSdk.Config.setTimeout(5000);
+ * LantahSdk.Config.setAllowHttp(true);
+ * LantahSdk.Config.setTimeout(5000);
  * ```
  * @static
  */

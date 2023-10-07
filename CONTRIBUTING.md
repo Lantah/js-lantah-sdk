@@ -6,17 +6,17 @@ Then please [sign the Contributor License Agreement](https://docs.google.com/for
 
 
 # Releasing
-Just like with the [js-stellar-base](https://github.com/stellar/js-stellar-base) library, there are a few important things to remember when releasing a new version of the library.
+Just like with the [js-lantah-base](https://github.com/lantah/js-lantah-base) library, there are a few important things to remember when releasing a new version of the library.
 
-In fact, you should follow [the steps there](https://github.com/stellar/js-stellar-base/blob/master/CONTRIBUTING.md#Releasing), first, except for this repository. Then, **if base has been updated**, you want to follow the additional steps here:
+In fact, you should follow [the steps there](https://github.com/lantah/js-lantah-base/blob/master/CONTRIBUTING.md#Releasing), first, except for this repository. Then, **if base has been updated**, you want to follow the additional steps here:
 
- - [ ] First, bump its version accordingly. This is straightforward: change the version field of `"stellar-base"` under the `"dependencies"` section in the SDK's [package.json](https://github.com/stellar/js-stellar-sdk/blob/master/package.json#L140), e.g.:
+ - [ ] First, bump its version accordingly. This is straightforward: change the version field of `"lantah-base"` under the `"dependencies"` section in the SDK's [package.json](https://github.com/lantah/js-lantah-sdk/blob/master/package.json#L140), e.g.:
 
 ```diff
   "dependencies": {
      ...
--    "stellar-base": "^1.0.0",
-+    "stellar-base": "^2.0.0",
+-    "lantah-base": "^1.0.0",
++    "lantah-base": "^2.0.0",
   }
 ```
 

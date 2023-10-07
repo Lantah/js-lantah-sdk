@@ -2,11 +2,11 @@ const MockAdapter = require("axios-mock-adapter");
 
 describe("ClaimableBalanceCallBuilder", function () {
   beforeEach(function () {
-    this.server = new StellarSdk.Server(
-      "https://horizon-live.stellar.org:1337",
+    this.server = new LantahSdk.Server(
+      "https://orbitr-live.lantah.network:1337",
     );
-    this.axiosMock = sinon.mock(HorizonAxiosClient);
-    StellarSdk.Config.setDefault();
+    this.axiosMock = sinon.mock(OrbitrAxiosClient);
+    LantahSdk.Config.setDefault();
   });
 
   afterEach(function () {
@@ -18,7 +18,7 @@ describe("ClaimableBalanceCallBuilder", function () {
     let singleBalanceResponse = {
       _links: {
         self: {
-          href: "horizon-live.stellar.org:1337/claimable_balances/00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072",
+          href: "orbitr-live.lantah.network:1337/claimable_balances/00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072",
         },
       },
       id: "00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072",
@@ -43,7 +43,7 @@ describe("ClaimableBalanceCallBuilder", function () {
       .expects("get")
       .withArgs(
         sinon.match(
-          "https://horizon-live.stellar.org:1337/claimable_balances/00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072",
+          "https://orbitr-live.lantah.network:1337/claimable_balances/00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072",
         ),
       )
       .returns(Promise.resolve({ data: singleBalanceResponse }));
@@ -67,13 +67,13 @@ describe("ClaimableBalanceCallBuilder", function () {
     const data = {
       _links: {
         self: {
-          href: "https://horizon-live.stellar.org:1337/claimable_balances?sponsor=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=asc",
+          href: "https://orbitr-live.lantah.network:1337/claimable_balances?sponsor=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=asc",
         },
         next: {
-          href: "https://horizon-live.stellar.org:1337/claimable_balances?sponsor=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=asc",
+          href: "https://orbitr-live.lantah.network:1337/claimable_balances?sponsor=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=asc",
         },
         prev: {
-          href: "https://horizon-live.stellar.org:1337/claimable_balances?sponsor=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=desc",
+          href: "https://orbitr-live.lantah.network:1337/claimable_balances?sponsor=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=desc",
         },
       },
       _embedded: {
@@ -85,7 +85,7 @@ describe("ClaimableBalanceCallBuilder", function () {
       .expects("get")
       .withArgs(
         sinon.match(
-          "https://horizon-live.stellar.org:1337/claimable_balances?sponsor=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD",
+          "https://orbitr-live.lantah.network:1337/claimable_balances?sponsor=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD",
         ),
       )
       .returns(Promise.resolve({ data }));
@@ -108,13 +108,13 @@ describe("ClaimableBalanceCallBuilder", function () {
     const data = {
       _links: {
         self: {
-          href: "https://horizon-live.stellar.org:1337/claimable_balances?claimant=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=asc",
+          href: "https://orbitr-live.lantah.network:1337/claimable_balances?claimant=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=asc",
         },
         next: {
-          href: "https://horizon-live.stellar.org:1337/claimable_balances?claimant=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=asc",
+          href: "https://orbitr-live.lantah.network:1337/claimable_balances?claimant=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=asc",
         },
         prev: {
-          href: "https://horizon-live.stellar.org:1337/claimable_balances?claimant=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=desc",
+          href: "https://orbitr-live.lantah.network:1337/claimable_balances?claimant=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=desc",
         },
       },
       _embedded: {
@@ -126,7 +126,7 @@ describe("ClaimableBalanceCallBuilder", function () {
       .expects("get")
       .withArgs(
         sinon.match(
-          "https://horizon-live.stellar.org:1337/claimable_balances?claimant=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD",
+          "https://orbitr-live.lantah.network:1337/claimable_balances?claimant=GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD",
         ),
       )
       .returns(Promise.resolve({ data }));
@@ -149,13 +149,13 @@ describe("ClaimableBalanceCallBuilder", function () {
     const data = {
       _links: {
         self: {
-          href: "https://horizon-live.stellar.org:1337/claimable_balances?asset=USD%3AGDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=asc",
+          href: "https://orbitr-live.lantah.network:1337/claimable_balances?asset=USD%3AGDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=asc",
         },
         next: {
-          href: "https://horizon-live.stellar.org:1337/claimable_balances?asset=USD%3AGDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=asc",
+          href: "https://orbitr-live.lantah.network:1337/claimable_balances?asset=USD%3AGDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=asc",
         },
         prev: {
-          href: "https://horizon-live.stellar.org:1337/claimable_balances?asset=USD%3AGDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=desc",
+          href: "https://orbitr-live.lantah.network:1337/claimable_balances?asset=USD%3AGDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD&cursor=&limit=10&order=desc",
         },
       },
       _embedded: {
@@ -167,7 +167,7 @@ describe("ClaimableBalanceCallBuilder", function () {
       .expects("get")
       .withArgs(
         sinon.match(
-          "https://horizon-live.stellar.org:1337/claimable_balances?asset=USD%3AGDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD",
+          "https://orbitr-live.lantah.network:1337/claimable_balances?asset=USD%3AGDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD",
         ),
       )
       .returns(Promise.resolve({ data }));
@@ -175,7 +175,7 @@ describe("ClaimableBalanceCallBuilder", function () {
     this.server
       .claimableBalances()
       .asset(
-        new StellarSdk.Asset(
+        new LantahSdk.Asset(
           "USD",
           "GDGQVOKHW4VEJRU2TETD6DBRKEO5ERCNF353LW5WBFW3JJWQ2BRQ6KDD",
         ),

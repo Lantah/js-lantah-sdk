@@ -1,10 +1,10 @@
 /* eslint-disable no-undef */
 
 require("@babel/register");
-global.StellarSdk = require("../lib/");
+global.LantahSdk = require("../lib/");
 
 global.axios = require("axios");
-global.HorizonAxiosClient = StellarSdk.HorizonAxiosClient;
+global.OrbitrAxiosClient = LantahSdk.OrbitrAxiosClient;
 
 var chaiAsPromised = require("chai-as-promised");
 var chaiHttp = require("chai-http");

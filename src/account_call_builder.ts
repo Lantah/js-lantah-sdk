@@ -1,4 +1,4 @@
-import { Asset } from "stellar-base";
+import { Asset } from "lantah-base";
 import { CallBuilder } from "./call_builder";
 import { ServerApi } from "./server_api";
 
@@ -10,7 +10,7 @@ import { ServerApi } from "./server_api";
  * @class AccountCallBuilder
  * @extends CallBuilder
  * @constructor
- * @param {string} serverUrl Horizon server URL.
+ * @param {string} serverUrl Orbitr server URL.
  */
 export class AccountCallBuilder extends CallBuilder<
   ServerApi.CollectionPage<ServerApi.AccountRecord>

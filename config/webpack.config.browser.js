@@ -9,8 +9,8 @@ const config = {
   target: 'web',
   // https://stackoverflow.com/a/34018909
   entry: {
-    'stellar-sdk': path.resolve(__dirname, '../src/browser.ts'),
-    'stellar-sdk.min': path.resolve(__dirname, '../src/browser.ts')
+    'lantah-sdk': path.resolve(__dirname, '../src/browser.ts'),
+    'lantah-sdk.min': path.resolve(__dirname, '../src/browser.ts')
   },
   resolve: {
     fallback: {
@@ -23,7 +23,7 @@ const config = {
   output: {
     clean: true,
     library: {
-      name: 'StellarSdk',
+      name: 'LantahSdk',
       type: 'umd',
       umdNamedDefine: true
     },
@@ -35,7 +35,7 @@ const config = {
     rules: [
       {
         test: /\.m?(ts|js)$/,
-        exclude: /node_modules\/(?!(stellar-base|js-xdr))/,
+        exclude: /node_modules\/(?!(lantah-base|js-xdr))/,
         use: {
           loader: 'babel-loader',
           options: {

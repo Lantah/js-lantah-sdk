@@ -11,7 +11,7 @@ import {
   TimeoutInfinite,
   Transaction,
   TransactionBuilder,
-} from "stellar-base";
+} from "lantah-base";
 import { InvalidSep10ChallengeError } from "./errors";
 import { ServerApi } from "./server_api";
 
@@ -34,9 +34,9 @@ export namespace Utils {
    * @param {string} webAuthDomain The fully qualified domain name of the service issuing the challenge.
    * @param {string} [memo] The memo to attach to the challenge transaction. The memo must be of type `id`. If the `clientaccountID` is a muxed account, memos cannot be used.
    * @param {string} [clientDomain] The fully qualified domain of the client requesting the challenge. Only necessary when the the 'client_domain' parameter is passed.
-   * @param {string} [clientSigningKey] The public key assigned to the SIGNING_KEY attribute specified on the stellar.toml hosted on the client domain. Only necessary when the 'client_domain' parameter is passed.
+   * @param {string} [clientSigningKey] The public key assigned to the SIGNING_KEY attribute specified on the lantah.toml hosted on the client domain. Only necessary when the 'client_domain' parameter is passed.
    * @example
-   * import { Utils, Keypair, Networks }  from 'stellar-sdk'
+   * import { Utils, Keypair, Networks }  from 'lantah-sdk'
    *
    * let serverKeyPair = Keypair.fromSecret("server-secret")
    * let challenge = Utils.buildChallengeTx(serverKeyPair, "client-stellar-account-id", "stellar.org", 300, Networks.TESTNET)
@@ -354,7 +354,7 @@ export namespace Utils {
    * @returns {string[]} The list of signers public keys that have signed the transaction, excluding the server account ID, given that the threshold was met.
    * @example
    *
-   * import { Networks, TransactionBuilder, Utils }  from 'stellar-sdk';
+   * import { Networks, TransactionBuilder, Utils }  from 'lantah-sdk';
    *
    * const serverKP = Keypair.random();
    * const clientKP1 = Keypair.random();
@@ -460,7 +460,7 @@ export namespace Utils {
    * @returns {string[]} The list of signers public keys that have signed the transaction, excluding the server account ID.
    * @example
    *
-   * import { Networks, TransactionBuilder, Utils }  from 'stellar-sdk';
+   * import { Networks, TransactionBuilder, Utils }  from 'lantah-sdk';
    *
    * const serverKP = Keypair.random();
    * const clientKP1 = Keypair.random();
@@ -629,7 +629,7 @@ export namespace Utils {
    * @param {string} accountID
    * @example
    * let keypair = Keypair.random();
-   * const account = new StellarSdk.Account(keypair.publicKey(), "-1");
+   * const account = new LantahSdk.Account(keypair.publicKey(), "-1");
    *
    * const transaction = new TransactionBuilder(account, { fee: 100 })
    *    .setTimeout(30)
@@ -659,7 +659,7 @@ export namespace Utils {
    * @example
    * let keypair1 = Keypair.random();
    * let keypair2 = Keypair.random();
-   * const account = new StellarSdk.Account(keypair1.publicKey(), "-1");
+   * const account = new LantahSdk.Account(keypair1.publicKey(), "-1");
    *
    * const transaction = new TransactionBuilder(account, { fee: 100 })
    *    .setTimeout(30)

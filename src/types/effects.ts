@@ -1,7 +1,7 @@
-import { Horizon } from "./../horizon_api";
+import { Orbitr } from "./../orbitr_api";
 import { OfferAsset } from "./offer";
 
-// Reference: GO SDK https://github.com/stellar/go/blob/ec5600bd6b2b6900d26988ff670b9ca7992313b8/services/horizon/internal/resourceadapter/effects.go
+// Reference: GO SDK https://github.com/stellar/go/blob/ec5600bd6b2b6900d26988ff670b9ca7992313b8/services/orbitr/internal/resourceadapter/effects.go
 export enum EffectType {
   // account effects
   account_created = 0,
@@ -67,7 +67,7 @@ export enum EffectType {
   contract_credited = 96,
   contract_debited = 97
 }
-export interface BaseEffectRecord extends Horizon.BaseResponse {
+export interface BaseEffectRecord extends Orbitr.BaseResponse {
   id: string;
   account: string;
   paging_token: string;
@@ -263,35 +263,35 @@ export type SignerSponsorshipRemoved = Omit<
   "new_sponsor" | "sponsor"
 > & { type_i: EffectType.signer_sponsorship_removed };
 
-export interface ClaimableBalanceClawedBack extends Horizon.BaseResponse {
+export interface ClaimableBalanceClawedBack extends Orbitr.BaseResponse {
 	balance_id: string
 }
 
-export interface LiquidityPoolEffectRecord extends Horizon.BaseResponse {
+export interface LiquidityPoolEffectRecord extends Orbitr.BaseResponse {
   id: string;
   fee_bp: number;
-  type: Horizon.LiquidityPoolType;
+  type: Orbitr.LiquidityPoolType;
   total_trustlines: string;
   total_shares: string;
-  reserves: Horizon.Reserve[];
+  reserves: Orbitr.Reserve[];
 }
 export interface LiquidityPoolDeposited extends BaseEffectRecord {
   type_i: EffectType.liquidity_pool_deposited;
   liquidity_pool: LiquidityPoolEffectRecord;
-  reserves_deposited: Horizon.Reserve[];
+  reserves_deposited: Orbitr.Reserve[];
   shares_received: string;
 }
 export interface LiquidityPoolWithdrew extends BaseEffectRecord {
   type_i: EffectType.liquidity_pool_withdrew;
   liquidity_pool: LiquidityPoolEffectRecord;
-  reserves_received: Horizon.Reserve[];
+  reserves_received: Orbitr.Reserve[];
   shares_redeemed: string;
 }
 export interface LiquidityPoolTrade extends BaseEffectRecord {
   type_i: EffectType.liquidity_pool_trade;
   liquidity_pool: LiquidityPoolEffectRecord;
-  sold: Horizon.Reserve;
-  bought: Horizon.Reserve;
+  sold: Orbitr.Reserve;
+  bought: Orbitr.Reserve;
 }
 export interface LiquidityPoolCreated extends BaseEffectRecord {
   type_i: EffectType.liquidity_pool_created;

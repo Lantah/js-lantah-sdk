@@ -7,7 +7,7 @@ import {
   StrKey,
   Transaction,
   xdr,
-} from "stellar-base";
+} from "lantah-base";
 import URI from "urijs";
 
 import { CallBuilder } from "./call_builder";
@@ -24,7 +24,7 @@ import { AssetsCallBuilder } from "./assets_call_builder";
 import { ClaimableBalanceCallBuilder } from "./claimable_balances_call_builder";
 import { EffectCallBuilder } from "./effect_call_builder";
 import { FriendbotBuilder } from "./friendbot_builder";
-import { Horizon } from "./horizon_api";
+import { Orbitr } from "./orbitr_api";
 import { LedgerCallBuilder } from "./ledger_call_builder";
 import { LiquidityPoolCallBuilder } from "./liquidity_pool_call_builder";
 import { OfferCallBuilder } from "./offer_call_builder";
@@ -38,27 +38,27 @@ import { TradeAggregationCallBuilder } from "./trade_aggregation_call_builder";
 import { TradesCallBuilder } from "./trades_call_builder";
 import { TransactionCallBuilder } from "./transaction_call_builder";
 
-import HorizonAxiosClient, {
+import OrbitrAxiosClient, {
   getCurrentServerTime,
-} from "./horizon_axios_client";
+} from "./orbitr_axios_client";
 
 export const SUBMIT_TRANSACTION_TIMEOUT = 60 * 1000;
 
-const STROOPS_IN_LUMEN = 10000000;
+const ug_IN_GRAM = 1000000;
 
 // ACCOUNT_REQUIRES_MEMO is the base64 encoding of "1".
 // SEP 29 uses this value to define transaction memo requirements for incoming payments.
 const ACCOUNT_REQUIRES_MEMO = "MQ==";
 
-function _getAmountInLumens(amt: BigNumber) {
-  return new BigNumber(amt).div(STROOPS_IN_LUMEN).toString();
+function _getAmountInGrams(amt: BigNumber) {
+  return new BigNumber(amt).div(ug_IN_GRAM).toString();
 }
 
 /**
- * Server handles the network connection to a [Horizon](https://developers.stellar.org/api/introduction/)
+ * Server handles the network connection to a [Orbitr](https://developers.stellar.org/api/introduction/)
  * instance and exposes an interface for requests to that instance.
  * @constructor
- * @param {string} serverURL Horizon Server URL (ex. `https://horizon-testnet.stellar.org`).
+ * @param {string} serverURL Orbitr Server URL (ex. `https://orbitr-testnet.lantah.network`).
  * @param {object} [opts] Options object
  * @param {boolean} [opts.allowHttp] - Allow connecting to http servers, default: `false`. This must be set to false in production deployments! You can also use {@link Config} class to set this globally.
  * @param {string} [opts.appName] - Allow set custom header `X-App-Name`, default: `undefined`.
@@ -67,7 +67,7 @@ function _getAmountInLumens(amt: BigNumber) {
  */
 export class Server {
   /**
-   * serverURL Horizon Server URL (ex. `https://horizon-testnet.stellar.org`).
+   * serverURL Orbitr Server URL (ex. `https://orbitr-testnet.lantah.network`).
    *
    * TODO: Solve `URI(this.serverURL as any)`.
    */
@@ -93,7 +93,7 @@ export class Server {
       customHeaders["X-Auth-Token"] = opts.authToken;
     }
     if (Object.keys(customHeaders).length > 0) {
-      HorizonAxiosClient.interceptors.request.use((config) => {
+      OrbitrAxiosClient.interceptors.request.use((config) => {
         // merge the custom headers with an existing headers, where customs
         // override defaults
         config.headers = Object.assign(config.headers, customHeaders);
@@ -103,7 +103,7 @@ export class Server {
     }
 
     if (this.serverURL.protocol() !== "https" && !allowHttp) {
-      throw new Error("Cannot connect to insecure horizon server");
+      throw new Error("Cannot connect to insecure orbitr server");
     }
   }
 
@@ -112,7 +112,7 @@ export class Server {
    * with {@link TransactionBuilder}.
    *
    * By default, {@link TransactionBuilder} uses the current local time, but
-   * your machine's local time could be different from Horizon's. This gives you
+   * your machine's local time could be different from Orbitr's. This gives you
    * more assurance that your timebounds will reflect what you want.
    *
    * Note that this will generate your timebounds when you **init the transaction**,
@@ -122,9 +122,9 @@ export class Server {
    * Example:
    *
    * ```javascript
-   * const transaction = new StellarSdk.TransactionBuilder(accountId, {
-   *  fee: await StellarSdk.Server.fetchBaseFee(),
-   *  timebounds: await StellarSdk.Server.fetchTimebounds(100)
+   * const transaction = new LantahSdk.TransactionBuilder(accountId, {
+   *  fee: await LantahSdk.Server.fetchBaseFee(),
+   *  timebounds: await LantahSdk.Server.fetchTimebounds(100)
    * })
    *  .addOperation(operation)
    *  // normally we would need to call setTimeout here, but setting timebounds
@@ -133,7 +133,7 @@ export class Server {
    * ```
    * @argument {number} seconds Number of seconds past the current time to wait.
    * @argument {bool} [_isRetry=false] True if this is a retry. Only set this internally!
-   * This is to avoid a scenario where Horizon is horking up the wrong date.
+   * This is to avoid a scenario where Orbitr is horking up the wrong date.
    * @returns {Promise<Timebounds>} Promise that resolves a `timebounds` object
    * (with the shape `{ minTime: 0, maxTime: N }`) that you can set the `timebounds` option to.
    */
@@ -141,7 +141,7 @@ export class Server {
     seconds: number,
     _isRetry: boolean = false,
   ): Promise<Server.Timebounds> {
-    // HorizonAxiosClient instead of this.ledgers so we can get at them headers
+    // OrbitrAxiosClient instead of this.ledgers so we can get at them headers
     const currentTime = getCurrentServerTime(this.serverURL.hostname());
 
     if (currentTime) {
@@ -161,7 +161,7 @@ export class Server {
 
     // otherwise, retry (by calling the root endpoint)
     // toString automatically adds the trailing slash
-    await HorizonAxiosClient.get(URI(this.serverURL as any).toString());
+    await OrbitrAxiosClient.get(URI(this.serverURL as any).toString());
     return await this.fetchTimebounds(seconds, true);
   }
 
@@ -180,10 +180,10 @@ export class Server {
   /**
    * Fetch the fee stats endpoint.
    * @see [Fee Stats](https://developers.stellar.org/api/aggregations/fee-stats/)
-   * @returns {Promise<Horizon.FeeStatsResponse>} Promise that resolves to the fee stats returned by Horizon.
+   * @returns {Promise<Orbitr.FeeStatsResponse>} Promise that resolves to the fee stats returned by Orbitr.
    */
-  public async feeStats(): Promise<Horizon.FeeStatsResponse> {
-    const cb = new CallBuilder<Horizon.FeeStatsResponse>(
+  public async feeStats(): Promise<Orbitr.FeeStatsResponse> {
+    const cb = new CallBuilder<Orbitr.FeeStatsResponse>(
       URI(this.serverURL as any),
     );
     cb.filter.push(["fee_stats"]);
@@ -191,7 +191,7 @@ export class Server {
   }
 
   /**
-   * Submits a transaction to the network.
+   * Submits a transaction to the Lantah network.
    *
    * By default this function calls {@link Server#checkMemoRequired}, you can
    * skip this check by setting the option `skipMemoRequiredCheck` to `true`.
@@ -292,12 +292,12 @@ export class Server {
    * required check, default: `false`. See
    * [SEP0029](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md).
    * @returns {Promise} Promise that resolves or rejects with response from
-   * horizon.
+   * orbitr.
    */
   public async submitTransaction(
     transaction: Transaction | FeeBumpTransaction,
     opts: Server.SubmitTransactionOptions = { skipMemoRequiredCheck: false },
-  ): Promise<Horizon.SubmitTransactionResponse> {
+  ): Promise<Orbitr.SubmitTransactionResponse> {
     // only check for memo required if skipMemoRequiredCheck is false and the transaction doesn't include a memo.
     if (!opts.skipMemoRequiredCheck) {
       await this.checkMemoRequired(transaction);
@@ -310,7 +310,7 @@ export class Server {
         .toString("base64"),
     );
 
-    return HorizonAxiosClient.post(
+    return OrbitrAxiosClient.post(
       URI(this.serverURL as any)
         .segment("transactions")
         .toString(),
@@ -322,11 +322,11 @@ export class Server {
           return response.data;
         }
 
-        // TODO: fix stellar-base types.
+        // TODO: fix lantah-base types.
         const responseXDR: xdr.TransactionResult = (xdr.TransactionResult
           .fromXDR as any)(response.data.result_xdr, "base64");
 
-        // TODO: fix stellar-base types.
+        // TODO: fix lantah-base types.
         const results = (responseXDR as any).result().value();
 
         let offerResults;
@@ -334,7 +334,7 @@ export class Server {
 
         if (results.length) {
           offerResults = results
-            // TODO: fix stellar-base types.
+            // TODO: fix lantah-base types.
             .map((result: any, i: number) => {
               if (
                 result.value().switch().name !== "manageBuyOffer" &&
@@ -355,7 +355,7 @@ export class Server {
 
               const offersClaimed = offerSuccess
                 .offersClaimed()
-                // TODO: fix stellar-base types.
+                // TODO: fix lantah-base types.
                 .map((offerClaimedAtom: any) => {
                   const offerClaimed = offerClaimedAtom.value();
 
@@ -422,9 +422,9 @@ export class Server {
                     sellerId,
                     offerId: offerClaimed.offerId().toString(),
                     assetSold,
-                    amountSold: _getAmountInLumens(claimedOfferAmountSold),
+                    amountSold: _getAmountInGrams(claimedOfferAmountSold),
                     assetBought,
-                    amountBought: _getAmountInLumens(claimedOfferAmountBought),
+                    amountBought: _getAmountInGrams(claimedOfferAmountBought),
                   };
                 });
 
@@ -442,7 +442,7 @@ export class Server {
                   offerId: offerXDR.offerId().toString(),
                   selling: {},
                   buying: {},
-                  amount: _getAmountInLumens(offerXDR.amount().toString()),
+                  amount: _getAmountInGrams(offerXDR.amount().toString()),
                   price: {
                     n: offerXDR.price().n(),
                     d: offerXDR.price().d(),
@@ -472,9 +472,9 @@ export class Server {
                 operationIndex: i,
                 currentOffer,
 
-                // this value is in stroops so divide it out
-                amountBought: _getAmountInLumens(amountBought),
-                amountSold: _getAmountInLumens(amountSold),
+                // this value is in ug so divide it out
+                amountBought: _getAmountInGrams(amountBought),
+                amountSold: _getAmountInGrams(amountSold),
 
                 isFullyOpen:
                   !offersClaimed.length && effect !== "manageOfferDeleted",
@@ -486,7 +486,7 @@ export class Server {
                   !offersClaimed.length && effect === "manageOfferDeleted",
               };
             })
-            // TODO: fix stellar-base types.
+            // TODO: fix lantah-base types.
             .filter((result: any) => !!result);
         }
 
@@ -508,35 +508,35 @@ export class Server {
   }
 
   /**
-   * @returns {AccountCallBuilder} New {@link AccountCallBuilder} object configured by a current Horizon server configuration.
+   * @returns {AccountCallBuilder} New {@link AccountCallBuilder} object configured by a current Orbitr server configuration.
    */
   public accounts(): AccountCallBuilder {
     return new AccountCallBuilder(URI(this.serverURL as any));
   }
 
   /**
-   * @returns {ClaimableBalanceCallBuilder} New {@link ClaimableBalanceCallBuilder} object configured by a current Horizon server configuration.
+   * @returns {ClaimableBalanceCallBuilder} New {@link ClaimableBalanceCallBuilder} object configured by a current Orbitr server configuration.
    */
   public claimableBalances(): ClaimableBalanceCallBuilder {
     return new ClaimableBalanceCallBuilder(URI(this.serverURL as any));
   }
 
   /**
-   * @returns {LedgerCallBuilder} New {@link LedgerCallBuilder} object configured by a current Horizon server configuration.
+   * @returns {LedgerCallBuilder} New {@link LedgerCallBuilder} object configured by a current Orbitr server configuration.
    */
   public ledgers(): LedgerCallBuilder {
     return new LedgerCallBuilder(URI(this.serverURL as any));
   }
 
   /**
-   * @returns {TransactionCallBuilder} New {@link TransactionCallBuilder} object configured by a current Horizon server configuration.
+   * @returns {TransactionCallBuilder} New {@link TransactionCallBuilder} object configured by a current Orbitr server configuration.
    */
   public transactions(): TransactionCallBuilder {
     return new TransactionCallBuilder(URI(this.serverURL as any));
   }
 
   /**
-   * People on the Stellar network can make offers to buy or sell assets. This endpoint represents all the offers on the DEX.
+   * People on the Lantah Network can make offers to buy or sell assets. This endpoint represents all the offers on the DEX.
    *
    * You can query all offers for account using the function `.accountId`:
    *
@@ -556,7 +556,7 @@ export class Server {
   /**
    * @param {Asset} selling Asset being sold
    * @param {Asset} buying Asset being bought
-   * @returns {OrderbookCallBuilder} New {@link OrderbookCallBuilder} object configured by a current Horizon server configuration.
+   * @returns {OrderbookCallBuilder} New {@link OrderbookCallBuilder} object configured by a current Orbitr server configuration.
    */
   public orderbook(selling: Asset, buying: Asset): OrderbookCallBuilder {
     return new OrderbookCallBuilder(
@@ -568,14 +568,14 @@ export class Server {
 
   /**
    * Returns
-   * @returns {TradesCallBuilder} New {@link TradesCallBuilder} object configured by a current Horizon server configuration.
+   * @returns {TradesCallBuilder} New {@link TradesCallBuilder} object configured by a current Orbitr server configuration.
    */
   public trades(): TradesCallBuilder {
     return new TradesCallBuilder(URI(this.serverURL as any));
   }
 
   /**
-   * @returns {OperationCallBuilder} New {@link OperationCallBuilder} object configured by a current Horizon server configuration.
+   * @returns {OperationCallBuilder} New {@link OperationCallBuilder} object configured by a current Orbitr server configuration.
    */
   public operations(): OperationCallBuilder {
     return new OperationCallBuilder(URI(this.serverURL as any));
@@ -583,14 +583,14 @@ export class Server {
 
   /**
    * @returns {LiquidityPoolCallBuilder} New {@link LiquidityPoolCallBuilder}
-   *     object configured to the current Horizon server settings.
+   *     object configured to the current Orbitr server settings.
    */
   public liquidityPools(): LiquidityPoolCallBuilder {
     return new LiquidityPoolCallBuilder(URI(this.serverURL));
   }
 
   /**
-   * The Stellar Network allows payments to be made between assets through path
+   * The Lantah Network allows payments to be made between assets through path
    * payments. A strict receive path payment specifies a series of assets to
    * route a payment through, from source asset (the asset debited from the
    * payer) to destination asset (the asset credited to the payee).
@@ -601,19 +601,19 @@ export class Server {
    * * The source address or source assets.
    * * The asset and amount that the destination account should receive.
    *
-   * As part of the search, horizon will load a list of assets available to the
+   * As part of the search, orbitr will load a list of assets available to the
    * source address and will find any payment paths from those source assets to
    * the desired destination asset. The search's amount parameter will be used
    * to determine if there a given path can satisfy a payment of the desired
    * amount.
    *
-   * If a list of assets is passed as the source, horizon will find any payment
+   * If a list of assets is passed as the source, orbitr will find any payment
    * paths from those source assets to the desired destination asset.
    *
    * @param {string|Asset[]} source The sender's account ID or a list of assets. Any returned path will use a source that the sender can hold.
    * @param {Asset} destinationAsset The destination asset.
    * @param {string} destinationAmount The amount, denominated in the destination asset, that any returned path should be able to satisfy.
-   * @returns {StrictReceivePathCallBuilder} New {@link StrictReceivePathCallBuilder} object configured with the current Horizon server configuration.
+   * @returns {StrictReceivePathCallBuilder} New {@link StrictReceivePathCallBuilder} object configured with the current Orbitr server configuration.
    */
   public strictReceivePaths(
     source: string | Asset[],
@@ -629,7 +629,7 @@ export class Server {
   }
 
   /**
-   * The Stellar Network allows payments to be made between assets through path payments. A strict send path payment specifies a
+   * The Lantah Network allows payments to be made between assets through path payments. A strict send path payment specifies a
    * series of assets to route a payment through, from source asset (the asset debited from the payer) to destination
    * asset (the asset credited to the payee).
    *
@@ -641,7 +641,7 @@ export class Server {
    * @param {Asset} sourceAsset The asset to be sent.
    * @param {string} sourceAmount The amount, denominated in the source asset, that any returned path should be able to satisfy.
    * @param {string|Asset[]} destination The destination account or the destination assets.
-   * @returns {StrictSendPathCallBuilder} New {@link StrictSendPathCallBuilder} object configured with the current Horizon server configuration.
+   * @returns {StrictSendPathCallBuilder} New {@link StrictSendPathCallBuilder} object configured with the current Orbitr server configuration.
    */
   public strictSendPaths(
     sourceAsset: Asset,
@@ -658,7 +658,7 @@ export class Server {
 
   /**
    * @returns {PaymentCallBuilder} New {@link PaymentCallBuilder} instance configured with the current
-   * Horizon server configuration.
+   * Orbitr server configuration.
    */
   public payments(): PaymentCallBuilder {
     return new PaymentCallBuilder(URI(this.serverURL as any) as any);
@@ -666,16 +666,16 @@ export class Server {
 
   /**
    * @returns {EffectCallBuilder} New {@link EffectCallBuilder} instance configured with the current
-   * Horizon server configuration
+   * Orbitr server configuration
    */
   public effects(): EffectCallBuilder {
     return new EffectCallBuilder(URI(this.serverURL as any) as any);
   }
 
   /**
-   * @param {string} address The Stellar ID that you want Friendbot to send lumens to
+   * @param {string} address The Stellar ID that you want Friendbot to send grams to
    * @returns {FriendbotBuilder} New {@link FriendbotBuilder} instance configured with the current
-   * Horizon server configuration
+   * Orbitr server configuration
    * @private
    */
   public friendbot(address: string): FriendbotBuilder {
@@ -684,7 +684,7 @@ export class Server {
 
   /**
    * Get a new {@link AssetsCallBuilder} instance configured with the current
-   * Horizon server configuration.
+   * Orbitr server configuration.
    * @returns {AssetsCallBuilder} New AssetsCallBuilder instance
    */
   public assets(): AssetsCallBuilder {
@@ -716,7 +716,7 @@ export class Server {
    * @param {long} end_time upper time boundary represented as millis since epoch
    * @param {long} resolution segment duration as millis since epoch. *Supported values are 5 minutes (300000), 15 minutes (900000), 1 hour (3600000), 1 day (86400000) and 1 week (604800000).
    * @param {long} offset segments can be offset using this parameter. Expressed in milliseconds. *Can only be used if the resolution is greater than 1 hour. Value must be in whole hours, less than the provided resolution, and less than 24 hours.
-   * Returns new {@link TradeAggregationCallBuilder} object configured with the current Horizon server configuration.
+   * Returns new {@link TradeAggregationCallBuilder} object configured with the current Orbitr server configuration.
    * @returns {TradeAggregationCallBuilder} New TradeAggregationCallBuilder instance
    */
   public tradeAggregation(
@@ -747,7 +747,7 @@ export class Server {
    * data field `config.memo_required` set to `"MQ=="`.
    *
    * Each account is checked sequentially instead of loading multiple accounts
-   * at the same time from Horizon.
+   * at the same time from Orbitr.
    *
    * @see
    * [SEP0029](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md)

@@ -2,14 +2,14 @@ import URI from "urijs";
 import URITemplate from "urijs/src/URITemplate";
 
 import { BadRequestError, NetworkError, NotFoundError } from "./errors";
-import { Horizon } from "./horizon_api";
-import HorizonAxiosClient from "./horizon_axios_client";
+import { Orbitr } from "./orbitr_api";
+import OrbitrAxiosClient from "./orbitr_axios_client";
 import { ServerApi } from "./server_api";
 
 /* tslint:disable-next-line:no-var-requires */
 const version = require("../package.json").version;
 
-// Resources which can be included in the Horizon response via the `join`
+// Resources which can be included in the Orbitr response via the `join`
 // query-param.
 const JOINABLE = ["transaction"];
 
@@ -30,14 +30,14 @@ let EventSource: Constructable<EventSource> = anyGlobal.EventSource ??
  * Creates a new {@link CallBuilder} pointed to server defined by serverUrl.
  *
  * This is an **abstract** class. Do not create this object directly, use {@link Server} class.
- * @param {string} serverUrl URL of Horizon server
+ * @param {string} serverUrl URL of Orbitr server
  * @class CallBuilder
  */
 export class CallBuilder<
   T extends
-    | Horizon.FeeStatsResponse
-    | Horizon.BaseResponse
-    | ServerApi.CollectionPage<Horizon.BaseResponse>
+    | Orbitr.FeeStatsResponse
+    | Orbitr.BaseResponse
+    | ServerApi.CollectionPage<Orbitr.BaseResponse>
 > {
   protected url: URI;
   public filter: string[][];
@@ -81,7 +81,7 @@ export class CallBuilder<
   /**
    * Creates an EventSource that listens for incoming messages from the server. To stop listening for new
    * events call the function returned by this method.
-   * @see [Horizon Response Format](https://developers.stellar.org/api/introduction/response-format/)
+   * @see [Orbitr Response Format](https://developers.stellar.org/api/introduction/response-format/)
    * @see [MDN EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource)
    * @param {object} [options] EventSource options.
    * @param {function} [options.onmessage] Callback function to handle incoming messages.
@@ -92,7 +92,7 @@ export class CallBuilder<
   public stream(options: EventSourceOptions<T> = {}): () => void {
     this.checkFilter();
 
-    this.url.setQuery("X-Client-Name", "js-stellar-sdk");
+    this.url.setQuery("X-Client-Name", "js-lantah-sdk");
     this.url.setQuery("X-Client-Version", version);
 
     // EventSource object
@@ -124,7 +124,7 @@ export class CallBuilder<
         return es;
       }
 
-      // when receiving the close message from Horizon we should close the
+      // when receiving the close message from Orbitr we should close the
       // connection and recreate the event source (basically retrying forever)
       let closed = false;
       const onClose = () => {
@@ -278,7 +278,7 @@ export class CallBuilder<
    * @param {bool} [link.templated] Whether the link is templated
    * @returns {function} A function that requests the link
    */
-  private _requestFnForLink(link: Horizon.ResponseLink): (opts?: any) => any {
+  private _requestFnForLink(link: Orbitr.ResponseLink): (opts?: any) => any {
     return async (opts: any = {}) => {
       let uri;
 
@@ -327,7 +327,7 @@ export class CallBuilder<
         // are loading from the server or in-memory (via join).
         json[key] = async () => record;
       } else {
-        json[key] = this._requestFnForLink(n as Horizon.ResponseLink);
+        json[key] = this._requestFnForLink(n as Orbitr.ResponseLink);
       }
     }
     return json;
@@ -344,7 +344,7 @@ export class CallBuilder<
       url = url.protocol(this.url.protocol());
     }
 
-    return HorizonAxiosClient.get(url.toString())
+    return OrbitrAxiosClient.get(url.toString())
       .then((response) => response.data)
       .catch(this._handleNetworkError);
   }

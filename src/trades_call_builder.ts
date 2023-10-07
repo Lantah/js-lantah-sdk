@@ -1,4 +1,4 @@
-import { Asset } from "stellar-base";
+import { Asset } from "lantah-base";
 import { CallBuilder } from "./call_builder";
 import { ServerApi } from "./server_api";
 
@@ -10,7 +10,7 @@ import { ServerApi } from "./server_api";
  * @extends CallBuilder
  * @constructor
  * @see [Trades](https://developers.stellar.org/api/resources/trades/)
- * @param {string} serverUrl serverUrl Horizon server URL.
+ * @param {string} serverUrl serverUrl Orbitr server URL.
  */
 export class TradesCallBuilder extends CallBuilder<
   ServerApi.CollectionPage<ServerApi.TradeRecord>

@@ -8,7 +8,7 @@ import { ServerApi } from "./server_api";
  * @see [All Payments](https://developers.stellar.org/api/resources/payments/)
  * @constructor
  * @extends CallBuilder
- * @param {string} serverUrl Horizon server URL.
+ * @param {string} serverUrl Orbitr server URL.
  */
 export class PaymentCallBuilder extends CallBuilder<
   ServerApi.CollectionPage<ServerApi.PaymentOperationRecord>

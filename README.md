@@ -2,67 +2,47 @@
   <img alt="Stellar" src="https://github.com/stellar/.github/raw/master/stellar-logo.png" width="558" />
   <br/>
   <strong>Creating equitable access to the global financial system</strong>
-  <h1>js-stellar-sdk</h1>
+  <h1>js-lantah-sdk</h1>
 </div>
 
-<p align="center">
-  <a href="https://badge.fury.io/js/stellar-sdk"><img src="https://badge.fury.io/js/stellar-sdk.svg" alt="npm version" height="18"></a>
-  <a href="https://www.npmjs.com/package/stellar-sdk">
-    <img alt="Weekly Downloads" src="https://img.shields.io/npm/dw/stellar-sdk" />
-  </a>
-  <a href="https://github.com/stellar/js-stellar-sdk/actions/workflows/tests.yml"><img alt="Test Status" src="https://github.com/stellar/js-stellar-sdk/actions/workflows/tests.yml/badge.svg" /></a>
-</p>
 
-js-stellar-sdk is a Javascript library for communicating with a
-[Stellar Horizon server](https://github.com/stellar/go/tree/master/services/horizon).
+js-lantah-sdk is a Javascript library for communicating with a
+[Lantah Orbitr server](https://github.com/lantah/go/tree/master/services/orbitr).
 It is used for building Stellar apps either on Node.js or in the browser.
 
 It provides:
 
-- a networking layer API for Horizon endpoints.
+- a networking layer API for Orbitr endpoints.
 - facilities for building and signing transactions, for communicating with a
-  Stellar Horizon instance, and for submitting transactions or querying network
+  Lantah Orbitr instance, and for submitting transactions or querying network
   history.
 
-### stellar-sdk vs stellar-base
+### lantah-sdk vs lantah-base
 
-stellar-sdk is a high-level library that serves as client-side API for Horizon.
-[stellar-base](https://github.com/stellar/js-stellar-base) is lower-level
-library for creating Stellar primitive constructs via XDR helpers and wrappers.
+lantah-sdk is a high-level library that serves as client-side API for Orbitr.
+[lantah-base](https://github.com/lantah/js-lantah-base) is lower-level
+library for creating Lantah primitive constructs via XDR helpers and wrappers.
 
-**Most people will want stellar-sdk instead of stellar-base.** You should only
-use stellar-base if you know what you're doing!
+**Most people will want lantah-sdk instead of lantah-base.** You should only
+use lantah-base if you know what you're doing!
 
-If you add `stellar-sdk` to a project, **do not add `stellar-base`!** Mis-matching
-versions could cause weird, hard-to-find bugs. `stellar-sdk` automatically
-installs `stellar-base` and exposes all of its exports in case you need them.
+If you add `lantah-sdk` to a project, **do not add `lantah-base`!** Mis-matching
+versions could cause weird, hard-to-find bugs. `lantah-sdk` automatically
+installs `lantah-base` and exposes all of its exports in case you need them.
 
-> **Important!** The Node.js version of the `stellar-base` (`stellar-sdk` dependency) package
+> **Important!** The Node.js version of the `lantah-base` (`lantah-sdk` dependency) package
 > uses the [`sodium-native`](https://www.npmjs.com/package/sodium-native) package as
 > an [optional dependency](https://docs.npmjs.com/files/package.json#optionaldependencies). `sodium-native` is
 > a low level binding to [libsodium](https://github.com/jedisct1/libsodium),
 > (an implementation of [Ed25519](https://ed25519.cr.yp.to/) signatures).
-> If installation of `sodium-native` fails, or it is unavailable, `stellar-base` (and `stellar-sdk`) will
+> If installation of `sodium-native` fails, or it is unavailable, `lantah-base` (and `lantah-sdk`) will
 > fallback to using the [`tweetnacl`](https://www.npmjs.com/package/tweetnacl) package implementation.
 >
-> If you are using `stellar-sdk`/`stellar-base` in a browser you can ignore
+> If you are using `lantah-sdk`/`lantah-base` in a browser you can ignore
 > this. However, for production backend deployments you should be
 > using `sodium-native`. If `sodium-native` is successfully installed and working the
-> `StellarSdk.FastSigning` variable will return `true`.
+> `LantahSdk.FastSigning` variable will return `true`.
 
-## Quick start
-
-Using npm to include js-stellar-sdk in your own project:
-
-```shell
-npm install --save stellar-sdk
-```
-
-Alternatively, you can use cdnjs in a browser:
-
-```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/{version}/stellar-sdk.js"></script>
-````
 
 ## Install
 
@@ -71,13 +51,13 @@ Alternatively, you can use cdnjs in a browser:
 1. Install it using npm:
 
 ```shell
-npm install --save stellar-sdk
+npm install --save lantah-sdk
 ```
 
 2. require/import it in your JavaScript:
 
 ```js
-var StellarSdk = require('stellar-sdk');
+var LantahSdk = require('lantah-sdk');
 ```
 
 ### To self host for use in the browser
@@ -85,52 +65,30 @@ var StellarSdk = require('stellar-sdk');
 1. Install it using [bower](http://bower.io):
 
 ```shell
-bower install stellar-sdk
+bower install lantah-sdk
 ```
 
 2. Include it in the browser:
 
 ```html
-<script src="./bower_components/stellar-sdk/stellar-sdk.js"></script>
+<script src="./bower_components/lantah-sdk/lantah-sdk.js"></script>
 <script>
-  console.log(StellarSdk);
+  console.log(LantahSdk);
 </script>
 ```
 
-If you don't want to use or install Bower, you can copy built JS files from the
-[bower-js-stellar-sdk repo](https://github.com/stellar/bower-js-stellar-sdk).
-
-### To use the [cdnjs](https://cdnjs.com/libraries/stellar-sdk) hosted script in the browser
-
-1. Instruct the browser to fetch the library from
-   [cdnjs](https://cdnjs.com/libraries/stellar-sdk), a 3rd party service that
-   hosts js libraries:
-
-```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/{version}/stellar-sdk.js"></script>
-<script>
-  console.log(StellarSdk);
-</script>
-```
-
-Note that this method relies using a third party to host the JS library. This
-may not be entirely secure.
-
-Make sure that you are using the latest version number. They can be found on the
-[releases page in Github](https://github.com/stellar/js-stellar-sdk/releases).
-
-### To develop and test js-stellar-sdk itself
+### To develop and test js-lantah-sdk itself
 
 1. Clone the repo:
 
 ```shell
-git clone https://github.com/stellar/js-stellar-sdk.git
+git clone https://github.com/lantah/js-lantah-sdk.git
 ```
 
-2. Install dependencies inside js-stellar-sdk folder:
+2. Install dependencies inside js-lantah-sdk folder:
 
 ```shell
-cd js-stellar-sdk
+cd js-lantah-sdk
 npm install
 ```
 
@@ -163,9 +121,9 @@ node_modules/.bin/gulp watch
 
 ## Usage
 
-For information on how to use js-stellar-sdk, take a look at [the
+For information on how to use js-lantah-sdk, take a look at [the
 documentation](https://stellar.github.io/js-stellar-sdk/), or [the
-examples](https://github.com/stellar/js-stellar-sdk/tree/master/docs/reference).
+examples](https://github.com/lantah/js-lantah-sdk/tree/master/docs/reference).
 
 There is also Horizon REST API Documentation
 [here](https://developers.stellar.org/api/introduction/).
@@ -188,9 +146,7 @@ module.exports = {
 };
 ```
 6. Add `import "./shim";` to the top of `index.js`
-7. `yarn add stellar-sdk`
-
-There is also a [sample](https://github.com/fnando/rn-stellar-sdk-sample) that you can follow.
+7. `yarn add lantah-sdk`
 
 #### Using in an Expo managed workflow
 
@@ -200,19 +156,19 @@ There is also a [sample](https://github.com/fnando/rn-stellar-sdk-sample) that y
 yarn rn-nodeify --install process,url,events,https,http,util,stream,crypto,vm,buffer --hack --yarn
 ```
 3. Add `import "./shim";` to the your app's entry point (by default `./App.js`)
-4. `yarn add stellar-sdk`
+4. `yarn add lantah-sdk`
 5. `expo install expo-random`
 
-At this point, the Stellar SDK will work, except that `StellarSdk.Keypair.random()` will throw an error. To work around this, you can create your own method to generate a random keypair like this:
+At this point, the Lantah SDK will work, except that `LantahSdk.Keypair.random()` will throw an error. To work around this, you can create your own method to generate a random keypair like this:
 
 ```javascript
 import * as Random from 'expo-random';
-import StellarSdk from 'stellar-sdk';
+import LantahSdk from 'lantah-sdk';
 
 const generateRandomKeypair = () => {
   const randomBytes = Random.getRandomBytes(32);
 
-  return StellarSdk.Keypair.fromRawEd25519Seed(Buffer.from(randomBytes));
+  return LantahSdk.Keypair.fromRawEd25519Seed(Buffer.from(randomBytes));
 };
 ```
 
@@ -249,12 +205,12 @@ cd jsdoc && serve .
 ## Documentation
 
 Documentation for this repo lives in
-[Developers site](https://github.com/stellar/js-stellar-sdk/blob/master/docs/reference/readme.md).
+[Developers site](https://github.com/lantah/js-lantah-sdk/blob/master/docs/reference/readme.md).
 
 ## Contributing
 
 For information on how to contribute, please refer to our
-[contribution guide](https://github.com/stellar/js-stellar-sdk/blob/master/CONTRIBUTING.md).
+[contribution guide](https://github.com/lantah/js-lantah-sdk/blob/master/CONTRIBUTING.md).
 
 ## Publishing to npm
 
@@ -269,6 +225,6 @@ npm >= 2.13.0 required. Read more about
 
 ## License
 
-js-stellar-sdk is licensed under an Apache-2.0 license. See the
-[LICENSE](https://github.com/stellar/js-stellar-sdk/blob/master/LICENSE) file
+js-lantah-sdk is licensed under an Apache-2.0 license. See the
+[LICENSE](https://github.com/lantah/js-lantah-sdk/blob/master/LICENSE) file
 for details.

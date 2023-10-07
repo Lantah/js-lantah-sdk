@@ -1,4 +1,4 @@
-import { Asset } from "stellar-base";
+import { Asset } from "lantah-base";
 import { CallBuilder } from "./call_builder";
 import { ServerApi } from "./server_api";
 
@@ -7,7 +7,7 @@ import { ServerApi } from "./server_api";
  *
  * Do not create this object directly, use {@link Server#orderbook}.
  * @see [Orderbook Details](https://developers.stellar.org/api/aggregations/order-books/)
- * @param {string} serverUrl serverUrl Horizon server URL.
+ * @param {string} serverUrl serverUrl Orbitr server URL.
  * @param {Asset} selling Asset being sold
  * @param {Asset} buying Asset being bought
  */

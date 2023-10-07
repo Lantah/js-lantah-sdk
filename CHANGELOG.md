@@ -837,7 +837,7 @@ The following enum values were rename in `OperationType`:
   server.strictReceivePaths(sourceAssets,destinationAsset, destinationAmount)
   ```
 
-  Or a by passing a Stellar source account address:
+  Or a by passing a Lantah source account address:
 
   ```
   server.strictReceivePaths(sourceAccount,destinationAsset, destinationAmount)

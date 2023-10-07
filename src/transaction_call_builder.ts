@@ -9,7 +9,7 @@ import { ServerApi } from "./server_api";
  * @extends CallBuilder
  * @see [All Transactions](https://developers.stellar.org/api/resources/transactions/)
  * @constructor
- * @param {string} serverUrl Horizon server URL.
+ * @param {string} serverUrl Orbitr server URL.
  */
 export class TransactionCallBuilder extends CallBuilder<
   ServerApi.CollectionPage<ServerApi.TransactionRecord>
