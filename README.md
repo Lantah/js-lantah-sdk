@@ -1,11 +1,3 @@
-<div align="center">
-  <img alt="Stellar" src="https://github.com/stellar/.github/raw/master/stellar-logo.png" width="558" />
-  <br/>
-  <strong>Creating equitable access to the global financial system</strong>
-  <h1>js-lantah-sdk</h1>
-</div>
-
-
 js-lantah-sdk is a Javascript library for communicating with a
 [Lantah Orbitr server](https://github.com/lantah/go/tree/master/services/orbitr).
 It is used for building Stellar apps either on Node.js or in the browser.
