@@ -1,7 +1,7 @@
 {
   "name": "lantah-sdk",
   "version": "11.0.0-beta.4",
-  "description": "A library for working with the Lantah Orbitr server, based on stellar-sdk.",
+  "description": "A library for working with the Lantah Orbitr server, based on stellar-sdk from the Stellar Development Foundation.",
   "keywords": [
     "lantah"
   ],
@@ -14,7 +14,7 @@
     "url": "https://github.com/lantah/js-lantah-sdk.git"
   },
   "license": "Apache-2.0",
-  "author": "Stellar Development Foundation <hello@stellar.org>",
+  "author": "Lantah Co <contact@lantah.org>",
   "contributors": "Lantah Co <contact@lantah.org>",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
