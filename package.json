@@ -1,5 +1,5 @@
 {
-  "name": "lantah-sdk",
+  "name": "@lantah/lantah-sdk",
   "version": "11.0.0-beta.4",
   "description": "A library for working with the Lantah Orbitr server, based on stellar-sdk from the Stellar Development Foundation.",
   "keywords": [
