@@ -1,4 +1,4 @@
-import { AssetType } from "lantah-base";
+import { AssetType } from "@lantah/lantah-base";
 import { Orbitr } from "./../orbitr_api";
 
 export interface AssetRecord extends Orbitr.BaseResponse {

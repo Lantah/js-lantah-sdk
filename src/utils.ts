@@ -11,7 +11,7 @@ import {
   TimeoutInfinite,
   Transaction,
   TransactionBuilder,
-} from "lantah-base";
+} from "@lantah/lantah-base";
 import { InvalidSep10ChallengeError } from "./errors";
 import { ServerApi } from "./server_api";
 

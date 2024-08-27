@@ -1,5 +1,5 @@
 import axios from "axios";
-import { StrKey } from "lantah-base";
+import { StrKey } from "@lantah/lantah-base";
 import URI from "urijs";
 
 import { Config } from "./config";

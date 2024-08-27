@@ -7,7 +7,7 @@ import {
   StrKey,
   Transaction,
   xdr,
-} from "lantah-base";
+} from "@lantah/lantah-base";
 import URI from "urijs";
 
 import { CallBuilder } from "./call_builder";

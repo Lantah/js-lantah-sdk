@@ -1,4 +1,4 @@
-import { Asset } from "lantah-base";
+import { Asset } from "@lantah/lantah-base";
 import { Omit } from "utility-types";
 import { Orbitr } from "./orbitr_api";
 

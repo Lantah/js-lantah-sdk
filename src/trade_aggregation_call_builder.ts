@@ -1,5 +1,5 @@
 /* tslint:disable: variable-name */
-import { Asset } from "lantah-base";
+import { Asset } from "@lantah/lantah-base";
 import { CallBuilder } from "./call_builder";
 import { BadRequestError } from "./errors";
 import { Orbitr } from "./orbitr_api";

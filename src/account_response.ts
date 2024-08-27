@@ -1,6 +1,6 @@
 /* tslint:disable:variable-name */
 
-import { Account as BaseAccount } from "lantah-base";
+import { Account as BaseAccount } from "@lantah/lantah-base";
 import { Orbitr } from "./orbitr_api";
 import { ServerApi } from "./server_api";
 

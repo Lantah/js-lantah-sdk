@@ -1,4 +1,4 @@
-import { AssetType, MemoType } from "lantah-base";
+import { AssetType, MemoType } from "@lantah/lantah-base";
 
 /* tslint:disable-next-line:no-namespace */
 export namespace Orbitr {

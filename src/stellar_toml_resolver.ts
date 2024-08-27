@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Networks } from "lantah-base";
+import { Networks } from "@lantah/lantah-base";
 import toml from "toml";
 import { Config } from "./config";
 

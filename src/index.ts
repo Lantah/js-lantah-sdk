@@ -29,7 +29,7 @@ export {
 export * from "./utils";
 
 // expose classes and functions from lantah-base
-export * from "lantah-base";
+export * from "@lantah/lantah-base";
 
 export { version };
 
